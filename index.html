@@ -1,0 +1,3562 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🦈 RAFT 全成就命運轉盤 (104全成就完整收錄・Steam官方全球達成率數據)</title>
+  <style>
+    :root {
+      --bg-primary: #0a1118;
+      --bg-secondary: #121d2b;
+      --bg-card: #18273a;
+      --bg-card-hover: #1f324a;
+      --accent: #26c6da;
+      --accent-hover: #00e5ff;
+      --gold: #ffd54f;
+      --danger: #ef5350;
+      --success: #66bb6a;
+      --purple: #ab47bc;
+      --text-main: #f0f4f8;
+      --text-muted: #8fa5b8;
+      --border: #22374e;
+      --border-light: #2d4866;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, "Microsoft JhengHei", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 15%, #16263a 0%, #090e15 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 頂部導覽列 */
+    header {
+      padding: 1rem 2rem;
+      background: rgba(10, 17, 24, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .title-area h1 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      text-shadow: 0 0 15px rgba(38, 198, 218, 0.4);
+    }
+
+    .title-area p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #081119;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border-color: var(--border-light);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+    }
+
+    .btn-success {
+      background: #2e7d32;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #388e3c;
+    }
+
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 0.78rem;
+    }
+
+    /* 主佈局 */
+    .main-container {
+      display: grid;
+      grid-template-columns: 480px 1fr;
+      gap: 20px;
+      padding: 20px;
+      flex: 1;
+      max-width: 1680px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    @media (max-width: 1100px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 左側轉盤面板 */
+    .wheel-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: sticky;
+      top: 85px;
+      height: fit-content;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 420px;
+      height: 420px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @media (max-width: 500px) {
+      .wheel-container {
+        width: 320px;
+        height: 320px;
+      }
+    }
+
+    #wheelCanvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(38, 198, 218, 0.2);
+    }
+
+    .wheel-pointer {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-top: 30px solid #ff5252;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.7));
+      z-index: 10;
+    }
+
+    .center-pin {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 68px;
+      height: 68px;
+      background: radial-gradient(circle, #253952 0%, #0d1622 100%);
+      border: 3px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+      color: var(--accent);
+      cursor: pointer;
+      z-index: 12;
+      box-shadow: 0 0 16px rgba(38, 198, 218, 0.5);
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .center-pin:hover {
+      transform: translate(-50%, -50%) scale(1.08);
+      border-color: var(--accent-hover);
+      box-shadow: 0 0 22px rgba(0, 229, 255, 0.8);
+    }
+
+    .btn-spin {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
+      transition: all 0.2s;
+      margin-top: 5px;
+    }
+
+    .btn-spin:hover:not(:disabled) {
+      background: linear-gradient(135deg, #00c3e6 0%, #0096c7 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 180, 216, 0.6);
+    }
+
+    .btn-spin:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 模式切換與快捷操作 */
+    .wheel-settings {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      gap: 8px;
+    }
+
+    .setting-label {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .mode-select {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      color: var(--accent);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .wheel-quick-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    /* 數據統計欄 */
+    .status-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+      margin-top: 14px;
+    }
+
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 6px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* 進度條 */
+    .progress-container {
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-primary);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #26c6da, #66bb6a);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* 右側清單面板 */
+    .list-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+      min-height: 600px;
+    }
+
+    .search-filter-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px rgba(38, 198, 218, 0.3);
+    }
+
+    /* 分類標籤切換 */
+    .category-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .category-pills::-webkit-scrollbar {
+      height: 4px;
+    }
+    .category-pills::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    .cat-pill {
+      padding: 4px 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .cat-pill:hover {
+      color: var(--text-main);
+      border-color: var(--border-light);
+    }
+
+    .cat-pill.active {
+      background: rgba(38, 198, 218, 0.15);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* 狀態分頁按鈕 */
+    .tab-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .tab-group {
+      display: flex;
+      background: var(--bg-primary);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      padding: 6px 12px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--bg-card);
+      color: var(--accent);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    /* 成就清單捲軸區 */
+    .achievement-list {
+      flex: 1;
+      max-height: calc(100vh - 280px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 6px;
+    }
+
+    .achievement-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .achievement-list::-webkit-scrollbar-thumb {
+      background: var(--border-light);
+      border-radius: 3px;
+    }
+
+    /* 成就卡片項目 */
+    .achievement-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.15s ease;
+    }
+
+    .achievement-item:hover {
+      border-color: var(--border-light);
+      background: var(--bg-card-hover);
+    }
+
+    .achievement-item.completed {
+      opacity: 0.55;
+      background: rgba(18, 29, 43, 0.5);
+      border-color: #1a293b;
+    }
+
+    .achievement-item.completed .item-title {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-checkbox {
+      transform: scale(1.25);
+      cursor: pointer;
+      accent-color: var(--success);
+    }
+
+    .item-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: #0d1520;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .item-icon-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .item-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .item-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .item-en-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    /* 標籤徽章 */
+    .badge {
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+    }
+
+    .badge-cat {
+      background: rgba(38, 198, 218, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(38, 198, 218, 0.3);
+    }
+
+    .badge-diff-easy {
+      background: rgba(76, 175, 80, 0.2);
+      color: #81c784;
+      border: 1px solid rgba(76, 175, 80, 0.4);
+    }
+    .badge-diff-medium {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffd54f;
+      border: 1px solid rgba(255, 193, 7, 0.4);
+    }
+    .badge-diff-hard {
+      background: rgba(255, 112, 67, 0.2);
+      color: #ff8a65;
+      border: 1px solid rgba(255, 112, 67, 0.4);
+    }
+    .badge-diff-hell {
+      background: rgba(239, 83, 80, 0.2);
+      color: #ef5350;
+      border: 1px solid rgba(239, 83, 80, 0.4);
+    }
+
+    .badge-rate {
+      background: rgba(0, 180, 216, 0.12);
+      color: #90caf9;
+      border: 1px solid rgba(144, 202, 249, 0.25);
+    }
+
+    .badge-hidden {
+      background: rgba(171, 71, 188, 0.2);
+      color: #ce93d8;
+      border: 1px solid rgba(171, 71, 188, 0.4);
+    }
+
+    .item-desc {
+      font-size: 0.78rem;
+      color: #b0bec5;
+      line-height: 1.3;
+    }
+
+    .item-req {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .item-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .in-wheel-toggle {
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .in-wheel-toggle input {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .probability-badge {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--gold);
+      min-width: 52px;
+      text-align: right;
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      font-size: 1rem;
+      border-radius: 4px;
+      transition: all 0.15s;
+    }
+
+    .icon-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .icon-btn.delete:hover {
+      color: var(--danger);
+    }
+
+    /* Modal 彈窗 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 560px;
+      padding: 24px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
+      position: relative;
+      animation: popIn 0.22s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.25rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .winner-banner {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .winner-icon-wrap {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 12px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 20px rgba(255, 213, 79, 0.4);
+    }
+
+    .winner-icon-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .winner-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--gold);
+      margin: 6px 0;
+      text-shadow: 0 0 15px rgba(255, 213, 79, 0.3);
+    }
+
+    .winner-en {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .winner-desc {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 12px 0;
+      text-align: left;
+      line-height: 1.4;
+    }
+
+    .winner-req {
+      font-size: 0.82rem;
+      color: #90caf9;
+      margin-top: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 0.88rem;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .celebration-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部標題區 -->
+  <header>
+    <div class="title-area">
+      <h1>🦈 RAFT 全成就命運轉盤</h1>
+      <p>收錄 104 個全成就・Steam官方全球達成率數據・動態權重運算・挑戰通關</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary" onclick="exportData()">💾 匯出進度</button>
+      <button class="btn btn-secondary" onclick="importDataModal()">📥 匯入進度</button>
+      <button class="btn btn-secondary" onclick="resetToDefault()">🔄 重置104全成就</button>
+    </div>
+  </header>
+
+  <!-- 主區塊 -->
+  <main class="main-container">
+
+    <!-- 左側命運轉盤區 -->
+    <div class="wheel-panel">
+      <div class="wheel-container">
+        <canvas id="wheelCanvas" width="800" height="800"></canvas>
+        <div class="wheel-pointer"></div>
+        <div class="center-pin" id="centerSpinBtn" title="點擊旋轉命運轉盤">⚓</div>
+      </div>
+
+      <button class="btn-spin" id="spinBtn">🎲 開始命運轉盤！</button>
+
+      <!-- 轉盤權重模式與快捷操作 -->
+      <div class="wheel-settings">
+        <div class="setting-row">
+          <span class="setting-label">⚖️ 輪盤比重計算模式：</span>
+          <select id="weightModeSelect" class="mode-select" onchange="changeWeightMode(this.value)">
+            <option value="steam">🌟 Steam全球達成率比重 (推薦：依遊戲推進)</option>
+            <option value="equal">⚖️ 均等機率 (1:1 平衡隨機)</option>
+            <option value="inverse">💀 反向地獄挑戰 (極限稀有優先)</option>
+            <option value="custom">✏️ 自訂成就權重</option>
+          </select>
+        </div>
+
+        <div class="wheel-quick-actions">
+          <button class="btn btn-secondary btn-sm" onclick="quickSelectRandom(20)" title="隨機挑選 20 個未完成成就加入輪盤">🎲 隨機抽20個</button>
+          <button class="btn btn-secondary btn-sm" onclick="quickSelectCategory()" title="僅將當前選中分類加入輪盤">🏷️ 加入當前分類</button>
+          <button class="btn btn-secondary btn-sm" onclick="setAllWheel(true)" title="全部未完成成就放入輪盤">🎯 全選入盤</button>
+          <button class="btn btn-secondary btn-sm" onclick="setAllWheel(false)" title="清空輪盤">🧹 清空輪盤</button>
+        </div>
+      </div>
+
+      <!-- 統計數據 -->
+      <div class="status-summary">
+        <div class="stat-box">
+          <div class="stat-val" id="statRemaining">0</div>
+          <div class="stat-label">待挑戰成就</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statInWheel">0</div>
+          <div class="stat-label">輪盤候選數</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statCompleted">0</div>
+          <div class="stat-label">已完成成就</div>
+        </div>
+      </div>
+
+      <!-- 進度條 -->
+      <div class="progress-container">
+        <div class="progress-header">
+          <span>全成就達成率進度</span>
+          <span id="progressText">0 / 104 (0%)</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右側成就列表區 -->
+    <div class="list-panel">
+      <div class="search-filter-box">
+        <!-- 搜尋列與自訂按鈕 -->
+        <div class="search-row">
+          <input type="search" id="searchInput" class="search-input" placeholder="🔍 搜尋成就名稱、英文名、描述或達成條件 (例如：鯊魚、Shark、烏托邦、365)..." oninput="handleSearch(this.value)">
+          <button class="btn btn-primary" onclick="openAddModal()">＋ 自訂成就</button>
+        </div>
+
+        <!-- 分類膠囊標籤 -->
+        <div class="category-pills">
+          <button class="cat-pill active" onclick="setCategoryFilter('all')">全部類別 (104)</button>
+          <button class="cat-pill" onclick="setCategoryFilter('story')">📜 劇情探索 (13)</button>
+          <button class="cat-pill" onclick="setCategoryFilter('combat')">🦈 狩獵戰鬥 (29)</button>
+          <button class="cat-pill" onclick="setCategoryFilter('building')">🔨 建造工藝 (12)</button>
+          <button class="cat-pill" onclick="setCategoryFilter('gathering')">🎣 收集經濟 (14)</button>
+          <button class="cat-pill" onclick="setCategoryFilter('survival')">🐑 生存牧業 (14)</button>
+          <button class="cat-pill" onclick="setCategoryFilter('special')">🎭 秘密彩蛋 (22)</button>
+        </div>
+      </div>
+
+      <!-- 狀態篩選頁籤 -->
+      <div class="tab-bar">
+        <div class="tab-group">
+          <button class="tab-btn active" onclick="setStatusFilter('active')">🎯 輪盤候選中</button>
+          <button class="tab-btn" onclick="setStatusFilter('uncompleted')">⏳ 待完成</button>
+          <button class="tab-btn" onclick="setStatusFilter('completed')">✅ 已完成</button>
+          <button class="tab-btn" onclick="setStatusFilter('all')">📑 全部 (104)</button>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);" id="filterResultCount">顯示 0 個成就</div>
+      </div>
+
+      <!-- 成就動態渲染列表 -->
+      <div class="achievement-list" id="achievementListContainer">
+        <!-- JS 動態生成 -->
+      </div>
+    </div>
+  </main>
+
+  <!-- 煙火畫布 -->
+  <canvas id="confettiCanvas" class="celebration-canvas"></canvas>
+
+  <!-- 中獎結果彈窗 -->
+  <div class="modal-overlay" id="resultModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>🎉 命運指引！下一個挑戰成就</h2>
+        <button class="icon-btn" onclick="closeResultModal()">✕</button>
+      </div>
+      <div class="winner-banner">
+        <div class="winner-icon-wrap" id="winnerIconWrap">
+          <img id="winnerIcon" src="" alt="成就圖示">
+        </div>
+        <div class="winner-title" id="winnerTitle">成就名稱</div>
+        <div class="winner-en" id="winnerEn">English Name</div>
+        <div id="winnerBadges" style="margin-bottom: 10px; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;"></div>
+        <div class="winner-desc">
+          <div id="winnerDescText">成就描述</div>
+          <div class="winner-req" id="winnerReqText"></div>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 18px;">
+          <button class="btn btn-success" id="btnMarkWonComplete">🏆 標記為已完成</button>
+          <button class="btn btn-primary" onclick="spinAgain()">🎲 再抽一次！</button>
+          <button class="btn btn-secondary" onclick="closeResultModal()">晚點解，先出海！</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增 / 編輯成就彈窗 -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modalTitleText">新增 / 編輯成就</h2>
+        <button class="icon-btn" onclick="closeAddModal()">✕</button>
+      </div>
+      <form id="addAchievementForm" onsubmit="handleSaveAchievement(event)">
+        <input type="hidden" id="editItemId" value="">
+        <div class="form-group">
+          <label>成就中文名稱</label>
+          <input type="text" id="achieveZhTitle" class="form-input" required placeholder="例如：新手鯊魚獵人！">
+        </div>
+        <div class="form-group">
+          <label>英文原名 (選填)</label>
+          <input type="text" id="achieveEnTitle" class="form-input" placeholder="例如：Beginner Shark Hunter!">
+        </div>
+        <div class="form-group">
+          <label>成就類別</label>
+          <select id="achieveCategory" class="form-select">
+            <option value="story">📜 劇情探索</option>
+            <option value="combat">🦈 狩獵戰鬥</option>
+            <option value="building">🔨 建造工藝</option>
+            <option value="gathering">🎣 收集經濟</option>
+            <option value="survival">🐑 生存牧業</option>
+            <option value="special">🎭 秘密彩蛋</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>遊戲內描述</label>
+          <input type="text" id="achieveDesc" class="form-input" placeholder="例如：殺死 1 隻鯊魚。">
+        </div>
+        <div class="form-group">
+          <label>詳細達成條件 (解法提示)</label>
+          <textarea id="achieveReq" class="form-textarea" rows="2" placeholder="詳細解鎖條件或攻略提示..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>權重比重數值 (影響輪盤出現機率)</label>
+          <input type="number" id="achieveWeight" class="form-input" min="1" max="100" value="30">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+          <button type="button" class="btn btn-secondary" onclick="closeAddModal()">取消</button>
+          <button type="submit" class="btn btn-primary">儲存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 匯入資料彈窗 -->
+  <div class="modal-overlay" id="importModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>匯入成就存檔 (JSON)</h2>
+        <button class="icon-btn" onclick="closeImportModal()">✕</button>
+      </div>
+      <div class="form-group">
+        <label>請貼上匯出的 JSON 代碼：</label>
+        <textarea id="importJsonText" class="form-textarea" rows="8" placeholder='[{"id":"...", ...}]'></textarea>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button class="btn btn-secondary" onclick="closeImportModal()">取消</button>
+        <button class="btn btn-primary" onclick="confirmImport()">確認匯入</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 依據官方 Wiki 與 Steam 社群全球達成率統計收錄之 104 個完整成就資料庫
+    const DEFAULT_ACHIEVEMENTS = [
+  {
+    "id": "1",
+    "steamName": "ach_build_purifierOne",
+    "title": "不加鹽更好 (It's Better Without The Salt.)",
+    "zhTitle": "不加鹽更好",
+    "enTitle": "It's Better Without The Salt.",
+    "desc": "製作並擺放一個初級淨化器。",
+    "requirement": "擺放初級淨化器。",
+    "weight": 47,
+    "globalPercent": 73.5,
+    "exophasePercent": 83.26,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/f/f1/It%27s_Better_Without_The_Salt..jpg/revision/latest?cb=20240126132711&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "2",
+    "steamName": "ach_build_cookingstandOne",
+    "title": "晚餐時間！ (Dinnertime!)",
+    "zhTitle": "晚餐時間！",
+    "enTitle": "Dinnertime!",
+    "desc": "製作並放置一個簡易烤架。",
+    "requirement": "擺放簡易烤架。",
+    "weight": 47,
+    "globalPercent": 70.1,
+    "exophasePercent": 80.84,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/5/54/Dinnertime%21.jpg/revision/latest?cb=20240126132711&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "3",
+    "steamName": "ach_sailor",
+    "title": "是的船長！ (Aye Aye Captain!)",
+    "zhTitle": "是的船長！",
+    "enTitle": "Aye Aye Captain!",
+    "desc": "將船帆和固定錨放在同一個木筏上。",
+    "requirement": "同時擺放船帆和固定錨。",
+    "weight": 39,
+    "globalPercent": 58.1,
+    "exophasePercent": 68.58,
+    "category": "special",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/b/ba/Aye_Aye_Captain%21.jpg/revision/latest?cb=20240126132710&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "4",
+    "steamName": "ach_cookedRecipe",
+    "title": "更複雜的混合！ (A More Complex Concoction!)",
+    "zhTitle": "更複雜的混合！",
+    "enTitle": "A More Complex Concoction!",
+    "desc": "按照食譜做菜。",
+    "requirement": "在物品欄中獲得任意 料理 。",
+    "weight": 34,
+    "globalPercent": 42.2,
+    "exophasePercent": 52.53,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/93/A_More_Complex_Concoction%21.jpg/revision/latest?cb=20240126132709&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "5",
+    "steamName": "ach_researcher",
+    "title": "書蟲！ (Bookworm!)",
+    "zhTitle": "書蟲！",
+    "enTitle": "Bookworm!",
+    "desc": "用研究桌研究所有內容。",
+    "requirement": "使用研究桌研究以下34種物品： 蜜蜂罐 黑色塗料 藍色塗料 螺栓 電路板 黏土 銅錠 污泥 乾燥的磚塊 蛋 空瓶 爆炸性粉末 羽毛 大蛤蜊 玻璃 鉸鏈 蜂房 皮革 金屬錠 釘子 棕櫚葉 厚木板 塑料 紅色花 紅色塗料 繩子 碎片 海草 石頭 鈦錠 葡萄藤粘性物 黃色花 黃色塗料 羊毛",
+    "weight": 15,
+    "globalPercent": 10.8,
+    "exophasePercent": 21.04,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/62/Bookworm%21.jpg/revision/latest?cb=20231010023851&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "6",
+    "steamName": "ach_reach_bigIsland",
+    "title": "大型陸地啊嘿！ (Large Landmass Ahoy!)",
+    "zhTitle": "大型陸地啊嘿！",
+    "enTitle": "Large Landmass Ahoy!",
+    "desc": "發現一座大島。",
+    "requirement": "抵達任意種類 大型島嶼 的位置。",
+    "weight": 47,
+    "globalPercent": 72.6,
+    "exophasePercent": 77.12,
+    "category": "special",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/b/b6/Large_Landmass_Ahoy%21.jpg/revision/latest?cb=20240126132711&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "7",
+    "steamName": "ach_hoarder",
+    "title": "囤積者！ (Hoarder!)",
+    "zhTitle": "囤積者！",
+    "enTitle": "Hoarder!",
+    "desc": "在同一個木筏上擺放20個物品庫。",
+    "requirement": "擺放以下任意物品20個，種類可以混合： 小物品庫 物品庫 大物品庫 冰箱",
+    "weight": 22,
+    "globalPercent": 24.2,
+    "exophasePercent": 28.27,
+    "category": "special",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/13/Hoarder%21.jpg/revision/latest?cb=20240126133627&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "8",
+    "steamName": "ach_farmer",
+    "title": "農夫！ (Farmer!)",
+    "zhTitle": "農夫！",
+    "enTitle": "Farmer!",
+    "desc": "在同一個木筏上擺放20個作物土盆。",
+    "requirement": "擺放以下任意物品20個，種類可以混合： 小土盆 高級小土盆 中土盆 高級中土盆 大土盆 高級大土盆",
+    "weight": 22,
+    "globalPercent": 24.2,
+    "exophasePercent": 28.86,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/98/Farmer%21.jpg/revision/latest?cb=20240126133627&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "9",
+    "steamName": "ach_playwithfriend",
+    "title": "團結合作！ (Teamplay!)",
+    "zhTitle": "團結合作！",
+    "enTitle": "Teamplay!",
+    "desc": "在多人遊戲中與朋友組隊。",
+    "requirement": "進行多人遊戲，世界中有至少1位自己以外的玩家。",
+    "weight": 48,
+    "globalPercent": 79.9,
+    "exophasePercent": 88.25,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/14/Teamplay%21.jpg/revision/latest?cb=20240126132711&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "10",
+    "steamName": "ach_survivor_day",
+    "title": "新手生存者！ (Beginner Survivor!)",
+    "zhTitle": "新手生存者！",
+    "enTitle": "Beginner Survivor!",
+    "desc": "存活1天。",
+    "requirement": "在遊戲中度過1天。",
+    "weight": 50,
+    "globalPercent": 92.6,
+    "exophasePercent": 99.24,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/7/7a/Beginner_Survivor%21.jpg/revision/latest?cb=20240126132710&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "11",
+    "steamName": "ach_survivor_week",
+    "title": "中級生存者！ (Intermediate Survivor!)",
+    "zhTitle": "中級生存者！",
+    "enTitle": "Intermediate Survivor!",
+    "desc": "存活7天。",
+    "requirement": "在遊戲中度過7天。",
+    "weight": 47,
+    "globalPercent": 74.3,
+    "exophasePercent": 85.44,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/6a/Intermediate_Survivor%21.jpg/revision/latest?cb=20240126132711&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "12",
+    "steamName": "ach_survivor_month",
+    "title": "專家生存者！ (Expert Survivor!)",
+    "zhTitle": "專家生存者！",
+    "enTitle": "Expert Survivor!",
+    "desc": "存活30天。",
+    "requirement": "在遊戲中度過30天。",
+    "weight": 37,
+    "globalPercent": 50.2,
+    "exophasePercent": 57.58,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/b/bf/Expert_Survivor%21.jpg/revision/latest?cb=20240126132711&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "13",
+    "steamName": "ach_survivor_year",
+    "title": "大師生存者！ (Master Survivor!)",
+    "zhTitle": "大師生存者！",
+    "enTitle": "Master Survivor!",
+    "desc": "存活365天。",
+    "requirement": "在遊戲中度過365天。",
+    "weight": 5,
+    "globalPercent": 1.4,
+    "exophasePercent": 3.03,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/5/5f/Master_Survivor%21.jpg/revision/latest?cb=20240126134457&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "14",
+    "steamName": "ach_build_foundation_10",
+    "title": "新手建築師！ (Beginner Builder!)",
+    "zhTitle": "新手建築師！",
+    "enTitle": "Beginner Builder!",
+    "desc": "建造10個基礎。",
+    "requirement": "建造以下任意結構1個： 基礎 牢固基礎 三角形基礎 牢固三角形基礎",
+    "weight": 48,
+    "globalPercent": 78.2,
+    "exophasePercent": 88.68,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/d/d6/Beginner_Builder%21.jpg/revision/latest?cb=20240126132710&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "15",
+    "steamName": "ach_build_foundation_100",
+    "title": "中級建築師！ (Intermediate Builder!)",
+    "zhTitle": "中級建築師！",
+    "enTitle": "Intermediate Builder!",
+    "desc": "建造100個基礎。",
+    "requirement": "建造以下任意結構100個，種類可以混合： 基礎 牢固基礎 三角形基礎 牢固三角形基礎",
+    "weight": 34,
+    "globalPercent": 41.6,
+    "exophasePercent": 50.62,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/a/a7/Intermediate_Builder%21.jpg/revision/latest?cb=20240126132711&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "16",
+    "steamName": "ach_build_foundation_1000",
+    "title": "專家建築師！ (Expert Builder!)",
+    "zhTitle": "專家建築師！",
+    "enTitle": "Expert Builder!",
+    "desc": "建造1000個基礎。",
+    "requirement": "建造以下任意結構1000個，種類可以混合： 基礎 牢固基礎 三角形基礎 牢固三角形基礎",
+    "weight": 5,
+    "globalPercent": 5.1,
+    "exophasePercent": 6.99,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/b/b5/Expert_Builder%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "17",
+    "steamName": "ach_gatherer_100",
+    "title": "新手收集者！ (Beginner Gatherer!)",
+    "zhTitle": "新手收集者！",
+    "enTitle": "Beginner Gatherer!",
+    "desc": "鉤起100個物品。",
+    "requirement": "使用 塑料鉤 、 碎片鉤 或 鈦鉤 拾取100個 漂流物 。",
+    "weight": 48,
+    "globalPercent": 76.5,
+    "exophasePercent": 89.36,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/f/f8/Beginner_Gatherer%21.jpg/revision/latest?cb=20240126132710&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "18",
+    "steamName": "ach_gatherer_500",
+    "title": "中級收集者！ (Intermediate Gatherer!)",
+    "zhTitle": "中級收集者！",
+    "enTitle": "Intermediate Gatherer!",
+    "desc": "鉤起500個物品。",
+    "requirement": "使用 塑料鉤 、 碎片鉤 或 鈦鉤 拾取500個 漂流物 。",
+    "weight": 31,
+    "globalPercent": 33.2,
+    "exophasePercent": 45.58,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/9c/Intermediate_Gatherer%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "19",
+    "steamName": "ach_gatherer_5000",
+    "title": "專家收集者！ (Expert Gatherer!)",
+    "zhTitle": "專家收集者！",
+    "enTitle": "Expert Gatherer!",
+    "desc": "鉤起5000個物品。",
+    "requirement": "使用 塑料鉤 、 碎片鉤 或 鈦鉤 拾取5000個 漂流物 。",
+    "weight": 5,
+    "globalPercent": 1.2,
+    "exophasePercent": 3.31,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/7/78/Expert_Gatherer%21.jpg/revision/latest?cb=20240126134456&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "20",
+    "steamName": "ach_build_painter_50",
+    "title": "新手油漆工！ (Beginner Painter!)",
+    "zhTitle": "新手油漆工！",
+    "enTitle": "Beginner Painter!",
+    "desc": "為50個方塊塗色。",
+    "requirement": "使用 塗料刷 為50個 結構 方塊塗色。",
+    "weight": 15,
+    "globalPercent": 10.0,
+    "exophasePercent": 15.74,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/f/f3/Beginner_Painter%21.jpg/revision/latest?cb=20240126133954&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "21",
+    "steamName": "ach_build_painter_200",
+    "title": "中級油漆工！ (Intermediate Painter!)",
+    "zhTitle": "中級油漆工！",
+    "enTitle": "Intermediate Painter!",
+    "desc": "為200個方塊塗色。",
+    "requirement": "使用 塗料刷 為200個 結構 方塊塗色。",
+    "weight": 6,
+    "globalPercent": 5.9,
+    "exophasePercent": 9.8,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/b/b1/Intermediate_Painter%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "22",
+    "steamName": "ach_build_painter_1000",
+    "title": "專家油漆工！ (Expert Painter!)",
+    "zhTitle": "專家油漆工！",
+    "enTitle": "Expert Painter!",
+    "desc": "為1000個方塊塗色。",
+    "requirement": "使用 塗料刷 為1000個 結構 方塊塗色。",
+    "weight": 5,
+    "globalPercent": 2.2,
+    "exophasePercent": 4.64,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/10/Expert_Painter%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "23",
+    "steamName": "ach_captureAnimal_1",
+    "title": "新手牧人！ (Beginner Wrangler!)",
+    "zhTitle": "新手牧人！",
+    "enTitle": "Beginner Wrangler!",
+    "desc": "捕捉1隻動物。",
+    "requirement": "使用 投網器 捕捉任意 牲畜 1隻： 咯咯鳥 山羊 羊駝",
+    "weight": 31,
+    "globalPercent": 34.4,
+    "exophasePercent": 40.13,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/c/c3/Beginner_Wrangler%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "24",
+    "steamName": "ach_captureAnimal_10",
+    "title": "中級牧人！ (Intermediate Wrangler!)",
+    "zhTitle": "中級牧人！",
+    "enTitle": "Intermediate Wrangler!",
+    "desc": "捕捉10隻動物。",
+    "requirement": "使用 投網器 捕捉任意 牲畜 10隻。",
+    "weight": 8,
+    "globalPercent": 8.3,
+    "exophasePercent": 11.49,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/a/ab/Intermediate_Wrangler%21.jpg/revision/latest?cb=20240126134322&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "25",
+    "steamName": "ach_captureAnimal_50",
+    "title": "專家牧人！ (Expert Wrangler!)",
+    "zhTitle": "專家牧人！",
+    "enTitle": "Expert Wrangler!",
+    "desc": "捕捉50隻動物。",
+    "requirement": "使用 投網器 捕捉任意 牲畜 50隻。",
+    "weight": 5,
+    "globalPercent": 1.2,
+    "exophasePercent": 3.01,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/2/20/Expert_Wrangler%21.jpg/revision/latest?cb=20240126134456&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "26",
+    "steamName": "ach_captureRareAnimal",
+    "title": "與眾不同！ (Some Look Different!)",
+    "zhTitle": "與眾不同！",
+    "enTitle": "Some Look Different!",
+    "desc": "捕捉一隻稀有動物。",
+    "requirement": "捕捉任意一隻稀有變種的 牲畜 。",
+    "weight": 19,
+    "globalPercent": 18.1,
+    "exophasePercent": 21.74,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/63/Some_Look_Different%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "27",
+    "steamName": "ach_sharkKiller_1",
+    "title": "新手鯊魚獵人！ (Beginner Shark Hunter!)",
+    "zhTitle": "新手鯊魚獵人！",
+    "enTitle": "Beginner Shark Hunter!",
+    "desc": "殺死1隻 鯊魚 。",
+    "requirement": "-",
+    "weight": 47,
+    "globalPercent": 75.7,
+    "exophasePercent": 88.48,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/6a/Beginner_Shark_Hunter%21.jpg/revision/latest?cb=20240126132710&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "28",
+    "steamName": "ach_sharkKiller_10",
+    "title": "中級鯊魚獵人！ (Intermediate Shark Hunter!)",
+    "zhTitle": "中級鯊魚獵人！",
+    "enTitle": "Intermediate Shark Hunter!",
+    "desc": "殺死10隻 鯊魚 。",
+    "requirement": "-",
+    "weight": 34,
+    "globalPercent": 43.3,
+    "exophasePercent": 55.21,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/17/Intermediate_Shark_Hunter%21.jpg/revision/latest?cb=20240126132711&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "29",
+    "steamName": "ach_sharkKiller_50",
+    "title": "專家鯊魚獵人！ (Expert Shark Hunter!)",
+    "zhTitle": "專家鯊魚獵人！",
+    "enTitle": "Expert Shark Hunter!",
+    "desc": "殺死50隻 鯊魚 。",
+    "requirement": "-",
+    "weight": 15,
+    "globalPercent": 10.3,
+    "exophasePercent": 14.37,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/8/8f/Expert_Shark_Hunter%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "30",
+    "steamName": "ach_birdKiller_1",
+    "title": "新手獵鳥人！ (Beginner Bird Hunter!)",
+    "zhTitle": "新手獵鳥人！",
+    "enTitle": "Beginner Bird Hunter!",
+    "desc": "殺死1隻鳥。",
+    "requirement": "殺死1隻 海鷗 。",
+    "weight": 39,
+    "globalPercent": 57.0,
+    "exophasePercent": 71.2,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/e/e5/Beginner_Bird_Hunter%21.jpg/revision/latest?cb=20240126132710&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "31",
+    "steamName": "ach_birdKiller_10",
+    "title": "中級獵鳥人！ (Intermediate Bird Hunter!)",
+    "zhTitle": "中級獵鳥人！",
+    "enTitle": "Intermediate Bird Hunter!",
+    "desc": "殺死10隻鳥。",
+    "requirement": "殺死10隻 海鷗 。",
+    "weight": 31,
+    "globalPercent": 33.4,
+    "exophasePercent": 45.03,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/0b/Intermediate_Bird_Hunter%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "32",
+    "steamName": "ach_birdKiller_50",
+    "title": "專家獵鳥人！ (Expert Bird Hunter!)",
+    "zhTitle": "專家獵鳥人！",
+    "enTitle": "Expert Bird Hunter!",
+    "desc": "殺死50隻鳥。",
+    "requirement": "殺死50隻 海鷗 。",
+    "weight": 10,
+    "globalPercent": 9.9,
+    "exophasePercent": 14.97,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/a/a9/Expert_Bird_Hunter%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "33",
+    "steamName": "ach_pufferKiller_1",
+    "title": "新手毒河豚獵人！ (Beginner Poison-Puffer Hunter!)",
+    "zhTitle": "新手毒河豚獵人！",
+    "enTitle": "Beginner Poison-Puffer Hunter!",
+    "desc": "殺死1隻 毒河豚 。",
+    "requirement": "-",
+    "weight": 34,
+    "globalPercent": 42.0,
+    "exophasePercent": 49.0,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/00/Beginner_Poison-Puffer_Hunter%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "34",
+    "steamName": "ach_pufferKiller_10",
+    "title": "中級毒河豚獵人！ (Intermediate Poison-Puffer Hunter!)",
+    "zhTitle": "中級毒河豚獵人！",
+    "enTitle": "Intermediate Poison-Puffer Hunter!",
+    "desc": "殺死10隻 毒河豚 。",
+    "requirement": "-",
+    "weight": 19,
+    "globalPercent": 17.9,
+    "exophasePercent": 22.23,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/f/f6/Intermediate_Poison-Puffer_Hunter%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "35",
+    "steamName": "ach_pufferKiller_50",
+    "title": "專家毒河豚獵人！ (Expert Poison-Puffer Hunter!)",
+    "zhTitle": "專家毒河豚獵人！",
+    "enTitle": "Expert Poison-Puffer Hunter!",
+    "desc": "殺死50隻 毒河豚 。",
+    "requirement": "-",
+    "weight": 5,
+    "globalPercent": 2.5,
+    "exophasePercent": 4.6,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/11/Expert_Poison-Puffer_Hunter%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "36",
+    "steamName": "ach_stoneBirdKiller_1",
+    "title": "新手尖嘯者獵人！ (Beginner Screecher Hunter!)",
+    "zhTitle": "新手尖嘯者獵人！",
+    "enTitle": "Beginner Screecher Hunter!",
+    "desc": "殺死1隻 尖嘯者 。",
+    "requirement": "-",
+    "weight": 31,
+    "globalPercent": 32.1,
+    "exophasePercent": 40.91,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/f/f7/Beginner_Screecher_Hunter%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "37",
+    "steamName": "ach_stoneBirdKiller_10",
+    "title": "中級尖嘯者獵人！ (Intermediate Screecher Hunter!)",
+    "zhTitle": "中級尖嘯者獵人！",
+    "enTitle": "Intermediate Screecher Hunter!",
+    "desc": "殺死10隻 尖嘯者 。",
+    "requirement": "-",
+    "weight": 5,
+    "globalPercent": 3.1,
+    "exophasePercent": 5.61,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/06/Intermediate_Screecher_Hunter%21.jpg/revision/latest?cb=20240126134322&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "38",
+    "steamName": "ach_stoneBirdKiller_50",
+    "title": "專家尖嘯者獵人！ (Expert Screecher Hunter!)",
+    "zhTitle": "專家尖嘯者獵人！",
+    "enTitle": "Expert Screecher Hunter!",
+    "desc": "殺死50隻 尖嘯者 。",
+    "requirement": "-",
+    "weight": 5,
+    "globalPercent": 0.9,
+    "exophasePercent": 2.67,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/05/Expert_Screecher_Hunter%21.jpg/revision/latest?cb=20240126134456&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "39",
+    "steamName": "ach_boarKiller_1",
+    "title": "新手疣豬獵人！ (Beginner Warthog Hunter!)",
+    "zhTitle": "新手疣豬獵人！",
+    "enTitle": "Beginner Warthog Hunter!",
+    "desc": "殺死1隻 疣豬 。",
+    "requirement": "-",
+    "weight": 45,
+    "globalPercent": 60.2,
+    "exophasePercent": 65.74,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/6f/Beginner_Warthog_Hunter%21.jpg/revision/latest?cb=20240126132710&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "40",
+    "steamName": "ach_boarKiller_10",
+    "title": "中級疣豬獵人！ (Intermediate Warthog Hunter!)",
+    "zhTitle": "中級疣豬獵人！",
+    "enTitle": "Intermediate Warthog Hunter!",
+    "desc": "殺死10隻 疣豬 。",
+    "requirement": "-",
+    "weight": 18,
+    "globalPercent": 15.7,
+    "exophasePercent": 17.77,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/4/48/Intermediate_Warthog_Hunter%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "41",
+    "steamName": "ach_boarKiller_50",
+    "title": "專家疣豬獵人！ (Expert Warthog Hunter!)",
+    "zhTitle": "專家疣豬獵人！",
+    "enTitle": "Expert Warthog Hunter!",
+    "desc": "殺死50隻 疣豬 。",
+    "requirement": "-",
+    "weight": 5,
+    "globalPercent": 1.4,
+    "exophasePercent": 3.08,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/4/45/Expert_Warthog_Hunter%21.jpg/revision/latest?cb=20240126134456&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "42",
+    "steamName": "ach_ratKiller_1",
+    "title": "新手潛伏者獵人！ (Beginner Lurker Hunter!)",
+    "zhTitle": "新手潛伏者獵人！",
+    "enTitle": "Beginner Lurker Hunter!",
+    "desc": "殺死1隻 潛伏者 。",
+    "requirement": "-",
+    "weight": 34,
+    "globalPercent": 42.3,
+    "exophasePercent": 52.01,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/f/f9/Beginner_Lurker_Hunter%21.jpg/revision/latest?cb=20240126132710&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "43",
+    "steamName": "ach_ratKiller_10",
+    "title": "中級潛伏者獵人！ (Intermediate Lurker Hunter!)",
+    "zhTitle": "中級潛伏者獵人！",
+    "enTitle": "Intermediate Lurker Hunter!",
+    "desc": "殺死10隻 潛伏者 。",
+    "requirement": "-",
+    "weight": 33,
+    "globalPercent": 39.4,
+    "exophasePercent": 49.0,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/6d/Intermediate_Lurker_Hunter%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "44",
+    "steamName": "ach_ratKiller_50",
+    "title": "專家潛伏者獵人！ (Expert Lurker Hunter!)",
+    "zhTitle": "專家潛伏者獵人！",
+    "enTitle": "Expert Lurker Hunter!",
+    "desc": "殺死50隻 潛伏者 。",
+    "requirement": "-",
+    "weight": 8,
+    "globalPercent": 8.5,
+    "exophasePercent": 12.5,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/1e/Expert_Lurker_Hunter%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "45",
+    "steamName": "ach_bearKiller_1",
+    "title": "新手熊獵人！ (Beginner Bear Hunter!)",
+    "zhTitle": "新手熊獵人！",
+    "enTitle": "Beginner Bear Hunter!",
+    "desc": "殺死1隻 熊 。",
+    "requirement": "殺死1隻 熊 或 北極熊 。",
+    "weight": 33,
+    "globalPercent": 38.0,
+    "exophasePercent": 46.93,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/8/89/Beginner_Bear_Hunter%21.jpg/revision/latest?cb=20240126133407&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "46",
+    "steamName": "ach_bearKiller_10",
+    "title": "中級熊獵人！ (Intermediate Bear Hunter!)",
+    "zhTitle": "中級熊獵人！",
+    "enTitle": "Intermediate Bear Hunter!",
+    "desc": "殺死10隻 熊 。",
+    "requirement": "殺死10隻 熊 或 北極熊 。",
+    "weight": 23,
+    "globalPercent": 26.5,
+    "exophasePercent": 33.52,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/3/30/Intermediate_Bear_Hunter%21.jpg/revision/latest?cb=20240126133627&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "47",
+    "steamName": "ach_bearKiller_50",
+    "title": "專家熊獵人！ (Expert Bear Hunter!)",
+    "zhTitle": "專家熊獵人！",
+    "enTitle": "Expert Bear Hunter!",
+    "desc": "殺死50隻 熊 。",
+    "requirement": "殺死50隻 熊 或 北極熊 。",
+    "weight": 5,
+    "globalPercent": 2.8,
+    "exophasePercent": 5.15,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/e/e7/Expert_Bear_Hunter%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "48",
+    "steamName": "ach_mamaBearKill",
+    "title": "母礦脈！ (Mother Lode!)",
+    "zhTitle": "母礦脈！",
+    "enTitle": "Mother Lode!",
+    "desc": "殺死 熊媽媽 。",
+    "requirement": "-",
+    "weight": 16,
+    "globalPercent": 12.2,
+    "exophasePercent": 17.27,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/3/38/Mother_Lode%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "49",
+    "steamName": "ach_vasagatan_Bomb",
+    "title": "盜版煙火！ (Bootleg Fireworks!)",
+    "zhTitle": "盜版煙火！",
+    "enTitle": "Bootleg Fireworks!",
+    "desc": "突破瓦薩加坦的駕駛艙！",
+    "requirement": "在 瓦薩加坦 的駕駛艙門使用炸彈。",
+    "weight": 33,
+    "globalPercent": 39.8,
+    "exophasePercent": 49.88,
+    "category": "story",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/7/7a/Bootleg_Fireworks%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "50",
+    "steamName": "ach_botKiller_1",
+    "title": "新手破壞者！ (Beginner Disruptor!)",
+    "zhTitle": "新手破壞者！",
+    "enTitle": "Beginner Disruptor!",
+    "desc": "破壞1個 管家機器人 。",
+    "requirement": "打倒1隻 管家機器人 。",
+    "weight": 23,
+    "globalPercent": 26.6,
+    "exophasePercent": 32.78,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/4/40/Beginner_Disruptor%21.jpg/revision/latest?cb=20240126133626&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "51",
+    "steamName": "ach_botKiller_10",
+    "title": "中級破壞者！ (Intermediate Disruptor!)",
+    "zhTitle": "中級破壞者！",
+    "enTitle": "Intermediate Disruptor!",
+    "desc": "破壞10個 管家機器人 。",
+    "requirement": "打倒10隻 管家機器人 。",
+    "weight": 19,
+    "globalPercent": 18.8,
+    "exophasePercent": 24.53,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/6c/Intermediate_Disruptor%21.jpg/revision/latest?cb=20240126133627&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "52",
+    "steamName": "ach_botKiller_20",
+    "title": "專家破壞者！ (Expert Disruptor!)",
+    "zhTitle": "專家破壞者！",
+    "enTitle": "Expert Disruptor!",
+    "desc": "破壞20個 管家機器人 。",
+    "requirement": "打倒20隻 管家機器人 。",
+    "weight": 8,
+    "globalPercent": 8.0,
+    "exophasePercent": 12.37,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/9b/Expert_Disruptor%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "53",
+    "steamName": "ach_anglerFishKiller_1",
+    "title": "新手鮟鱇魚獵人！ (Beginner Anglerfish Hunter!)",
+    "zhTitle": "新手鮟鱇魚獵人！",
+    "enTitle": "Beginner Anglerfish Hunter!",
+    "desc": "殺死1隻 鮟鱇魚 。",
+    "requirement": "-",
+    "weight": 20,
+    "globalPercent": 19.8,
+    "exophasePercent": 22.34,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/07/Beginner_Anglerfish_Hunter%21.jpg/revision/latest?cb=20240126132710&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "54",
+    "steamName": "ach_anglerFishKiller_10",
+    "title": "中級鮟鱇魚獵人！ (Intermediate Anglerfish Hunter!)",
+    "zhTitle": "中級鮟鱇魚獵人！",
+    "enTitle": "Intermediate Anglerfish Hunter!",
+    "desc": "殺死10隻 鮟鱇魚 。",
+    "requirement": "-",
+    "weight": 5,
+    "globalPercent": 3.1,
+    "exophasePercent": 4.81,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/e/e7/Intermediate_Anglerfish_Hunter%21.jpg/revision/latest?cb=20240126134457&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "55",
+    "steamName": "ach_anglerFishKiller_50",
+    "title": "專家鮟鱇魚獵人！ (Expert Anglerfish Hunter!)",
+    "zhTitle": "專家鮟鱇魚獵人！",
+    "enTitle": "Expert Anglerfish Hunter!",
+    "desc": "殺死50隻 鮟鱇魚 。",
+    "requirement": "-",
+    "weight": 5,
+    "globalPercent": 0.6,
+    "exophasePercent": 2.09,
+    "category": "combat",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/62/Expert_Anglerfish_Hunter%21.jpg/revision/latest?cb=20240126134456&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "56",
+    "steamName": "ach_varunaBossKill",
+    "title": "爆炸性威力！ (Explosive Force!)",
+    "zhTitle": "爆炸性威力！",
+    "enTitle": "Explosive Force!",
+    "desc": "殺死 犀牛鯊 。",
+    "requirement": "-",
+    "weight": 20,
+    "globalPercent": 20.5,
+    "exophasePercent": 22.46,
+    "category": "combat",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/7/7a/Explosive_Force%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "57",
+    "steamName": "ach_allNotes_RadioTower",
+    "title": "無線電塔歷史學家！ (Radio Tower Historian!)",
+    "zhTitle": "無線電塔歷史學家！",
+    "enTitle": "Radio Tower Historian!",
+    "desc": "找到無線電塔的所有字條！",
+    "requirement": "收集 無線電塔 的5張故事字條。",
+    "weight": 32,
+    "globalPercent": 34.8,
+    "exophasePercent": 44.76,
+    "category": "story",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/7/7f/Radio_Tower_Historian%21.jpg/revision/latest?cb=20240221144059&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "58",
+    "steamName": "ach_allNotes_Vasagatan",
+    "title": "瓦薩加坦歷史學家！ (Vasagatan Historian!)",
+    "zhTitle": "瓦薩加坦歷史學家！",
+    "enTitle": "Vasagatan Historian!",
+    "desc": "找到瓦薩加坦的所有字條！",
+    "requirement": "收集 瓦薩加坦 的11張故事字條。",
+    "weight": 33,
+    "globalPercent": 37.8,
+    "exophasePercent": 46.75,
+    "category": "story",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/14/Vasagatan_Historian%21.jpg/revision/latest?cb=20240221144102&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "59",
+    "steamName": "ach_allNotes_Balboa",
+    "title": "巴爾博亞島歷史學家！ (Balboa Historian!)",
+    "zhTitle": "巴爾博亞島歷史學家！",
+    "enTitle": "Balboa Historian!",
+    "desc": "找到巴爾博亞島的所有字條！",
+    "requirement": "收集 巴爾博亞島 的12張故事字條。",
+    "weight": 22,
+    "globalPercent": 24.2,
+    "exophasePercent": 32.12,
+    "category": "story",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/8/85/Balboa_Historian%21.jpg/revision/latest?cb=20240221144057&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "60",
+    "steamName": "ach_allNotes_Caravan",
+    "title": "大篷車鎮歷史學家！ (Caravan Town Historian!)",
+    "zhTitle": "大篷車鎮歷史學家！",
+    "enTitle": "Caravan Town Historian!",
+    "desc": "找到大篷車鎮的所有字條！",
+    "requirement": "收集 大篷車鎮 的10張故事字條。",
+    "weight": 23,
+    "globalPercent": 26.6,
+    "exophasePercent": 32.22,
+    "category": "story",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/e/e5/Caravan_Town_Historian%21.jpg/revision/latest?cb=20240221144058&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "61",
+    "steamName": "ach_allNotes_Tangaroa",
+    "title": "唐加羅瓦歷史學家！ (Tangaroa Historian!)",
+    "zhTitle": "唐加羅瓦歷史學家！",
+    "enTitle": "Tangaroa Historian!",
+    "desc": "找到唐加羅瓦的所有字條！",
+    "requirement": "收集 唐加羅瓦 的10張故事字條。",
+    "weight": 21,
+    "globalPercent": 22.0,
+    "exophasePercent": 27.97,
+    "category": "story",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/69/Tangaroa_Historian%21.jpg/revision/latest?cb=20240221144100&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "62",
+    "steamName": "ach_allNotes_Varuna",
+    "title": "瓦魯納角歷史學家！ (Varuna Point Historian!)",
+    "zhTitle": "瓦魯納角歷史學家！",
+    "enTitle": "Varuna Point Historian!",
+    "desc": "找到瓦魯納角的所有字條！",
+    "requirement": "收集 瓦魯納角 的7張故事字條。",
+    "weight": 18,
+    "globalPercent": 16.2,
+    "exophasePercent": 18.78,
+    "category": "story",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/06/Varuna_Point_Historian%21.jpg/revision/latest?cb=20240221144101&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "63",
+    "steamName": "ach_allNotes_Temperance",
+    "title": "唐普蘭斯歷史學家！ (Temperance Historian!)",
+    "zhTitle": "唐普蘭斯歷史學家！",
+    "enTitle": "Temperance Historian!",
+    "desc": "找到唐普蘭斯的所有字條！",
+    "requirement": "收集 唐普蘭斯 的12張故事字條。",
+    "weight": 7,
+    "globalPercent": 7.3,
+    "exophasePercent": 10.89,
+    "category": "story",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/4/45/Temperance_Historian%21.jpg/revision/latest?cb=20240221144101&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "64",
+    "steamName": "ach_balboaBicycle",
+    "title": "叮！ (Pling!)",
+    "zhTitle": "叮！",
+    "enTitle": "Pling!",
+    "desc": "熊會使用自行車鈴嗎？",
+    "requirement": "與 巴爾博亞島 的 自行車 互動。",
+    "weight": 24,
+    "globalPercent": 27.9,
+    "exophasePercent": 37.86,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/8/8a/Pling%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "65",
+    "steamName": "ach_tinyLittleMurderer",
+    "title": "小小殺人犯 (Tiny Little Murderer)",
+    "zhTitle": "小小殺人犯",
+    "enTitle": "Tiny Little Murderer",
+    "desc": "現在一切都那麼明顯了...",
+    "requirement": "與 巴爾博亞島 上的人偶互動以取走燈泡。",
+    "weight": 31,
+    "globalPercent": 31.6,
+    "exophasePercent": 39.89,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/08/Tiny_Little_Murderer.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "66",
+    "steamName": "ach_brunosToolboard",
+    "title": "一個啟示！ (A Revelation!)",
+    "zhTitle": "一個啟示！",
+    "enTitle": "A Revelation!",
+    "desc": "為什麼工具板後面有一張照片？",
+    "requirement": "找到 護林站 工具板後的字條。",
+    "weight": 25,
+    "globalPercent": 29.1,
+    "exophasePercent": 38.03,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/13/A_Revelation%21.jpg/revision/latest?cb=20240126133407&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "67",
+    "steamName": "ach_fixErrol",
+    "title": "修復埃羅爾！ (Fix Errol!)",
+    "zhTitle": "修復埃羅爾！",
+    "enTitle": "Fix Errol!",
+    "desc": "拿去吧，埃羅爾。",
+    "requirement": "對在 護林站 前的人偶使用燈泡。",
+    "weight": 23,
+    "globalPercent": 25.4,
+    "exophasePercent": 33.96,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/0d/Fix_Errol%21.jpg/revision/latest?cb=20240126133627&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "68",
+    "steamName": "ach_radiotower",
+    "title": "有一座烏托邦？ (Is There A Utopia?)",
+    "zhTitle": "有一座烏托邦？",
+    "enTitle": "Is There A Utopia?",
+    "desc": "找到無線電塔裡的白板。",
+    "requirement": "進入 無線電塔 最頂端的房間。",
+    "weight": 36,
+    "globalPercent": 46.5,
+    "exophasePercent": 58.31,
+    "category": "story",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/2/27/Is_There_A_Utopia%3F.jpg/revision/latest?cb=20240126132748&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "69",
+    "steamName": "ach_build_reorganizer",
+    "title": "搬有運無！ (This Goes Here!)",
+    "zhTitle": "搬有運無！",
+    "enTitle": "This Goes Here!",
+    "desc": "破壞或搬起100個方塊。",
+    "requirement": "破壞或搬起100個 結構 方塊。",
+    "weight": 25,
+    "globalPercent": 29.6,
+    "exophasePercent": 36.39,
+    "category": "building",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/91/This_Goes_Here%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "70",
+    "steamName": "ach_diveDeep",
+    "title": "探索深淵！ (Exploring The depths!)",
+    "zhTitle": "探索深淵！",
+    "enTitle": "Exploring The depths!",
+    "desc": "到達水面以下100公尺的深度。",
+    "requirement": "-",
+    "weight": 32,
+    "globalPercent": 35.1,
+    "exophasePercent": 42.08,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/9d/Exploring_The_depths%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "71",
+    "steamName": "ach_reach_pilotIsland",
+    "title": "不成功的降落！ (Not A Great Landing!)",
+    "zhTitle": "不成功的降落！",
+    "enTitle": "Not A Great Landing!",
+    "desc": "發現墜毀的飛機。",
+    "requirement": "抵達 墜機島 。",
+    "weight": 17,
+    "globalPercent": 14.1,
+    "exophasePercent": 19.59,
+    "category": "story",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/b/bf/Not_A_Great_Landing%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "72",
+    "steamName": "ach_cemetary",
+    "title": "海洋墓地！ (An Ocean Cemetery!)",
+    "zhTitle": "海洋墓地！",
+    "enTitle": "An Ocean Cemetery!",
+    "desc": "死25次。",
+    "requirement": "-",
+    "weight": 18,
+    "globalPercent": 15.6,
+    "exophasePercent": 16.61,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/b/b4/An_Ocean_Cemetery%21.jpg/revision/latest?cb=20240126133954&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "73",
+    "steamName": "ach_reach_captainIsland",
+    "title": "喔！我的船長！？ (O Captain! My Captain!?)",
+    "zhTitle": "喔！我的船長！？",
+    "enTitle": "O Captain! My Captain!?",
+    "desc": "抵達船長島。",
+    "requirement": "抵達 沉船島 。",
+    "weight": 19,
+    "globalPercent": 18.0,
+    "exophasePercent": 23.57,
+    "category": "story",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/3/35/O_Captain%21_My_Captain%21%3F.jpg/revision/latest?cb=20240126133627&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "74",
+    "steamName": "ach_allRBPaintings",
+    "title": "藝術收藏！ (Artistic Collection!)",
+    "zhTitle": "藝術收藏！",
+    "enTitle": "Artistic Collection!",
+    "desc": "找到並放置所有開發者繪畫。",
+    "requirement": "放置以下8種開發者繪畫： 人與月 花盆 雨後 石圈 鄰家小狗 真實自畫像 究竟是什麼? 污霧",
+    "weight": 5,
+    "globalPercent": 1.0,
+    "exophasePercent": 2.83,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/9f/Artistic_Collection%21.jpg/revision/latest?cb=20240126134455&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "75",
+    "steamName": "ach_zip_100m",
+    "title": "新手滑索者！ (Beginner Ziponaut!)",
+    "zhTitle": "新手滑索者！",
+    "enTitle": "Beginner Ziponaut!",
+    "desc": "使用 滑索工具 或 電動滑索工具 滑行100公尺。",
+    "requirement": "-",
+    "weight": 23,
+    "globalPercent": 26.0,
+    "exophasePercent": 32.52,
+    "category": "special",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/08/Beginner_Ziponaut%21.jpg/revision/latest?cb=20240126133626&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "76",
+    "steamName": "ach_zip_500m",
+    "title": "中級滑索者！ (Intermediate Ziponaut!)",
+    "zhTitle": "中級滑索者！",
+    "enTitle": "Intermediate Ziponaut!",
+    "desc": "使用 滑索工具 或 電動滑索工具 滑行500公尺。",
+    "requirement": "-",
+    "weight": 16,
+    "globalPercent": 12.3,
+    "exophasePercent": 16.5,
+    "category": "special",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/6c/Intermediate_Ziponaut%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "77",
+    "steamName": "ach_zip_1500m",
+    "title": "專家滑索者！ (Expert Ziponaut!)",
+    "zhTitle": "專家滑索者！",
+    "enTitle": "Expert Ziponaut!",
+    "desc": "使用 滑索工具 或 電動滑索工具 滑行1500公尺。",
+    "requirement": "-",
+    "weight": 5,
+    "globalPercent": 2.5,
+    "exophasePercent": 5.04,
+    "category": "special",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/61/Expert_Ziponaut%21.jpg/revision/latest?cb=20240126134456&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "78",
+    "steamName": "ach_excevator_1",
+    "title": "新手挖寶人！ (Beginner Excavator!)",
+    "zhTitle": "新手挖寶人！",
+    "enTitle": "Beginner Excavator!",
+    "desc": "挖出1個寶箱。",
+    "requirement": "挖掘1個埋藏的寶藏。",
+    "weight": 22,
+    "globalPercent": 24.3,
+    "exophasePercent": 30.04,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/c/c7/Beginner_Excavator%21.jpg/revision/latest?cb=20240126133626&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "79",
+    "steamName": "ach_excevator_20",
+    "title": "中級挖寶人！ (Intermediate Excavator!)",
+    "zhTitle": "中級挖寶人！",
+    "enTitle": "Intermediate Excavator!",
+    "desc": "挖出20個寶箱。",
+    "requirement": "挖掘20個埋藏的寶藏。",
+    "weight": 8,
+    "globalPercent": 7.8,
+    "exophasePercent": 10.68,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/4/4e/Intermediate_Excavator%21.jpg/revision/latest?cb=20240126134322&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "80",
+    "steamName": "ach_excevator_50",
+    "title": "專家挖寶人！ (Expert Excavator!)",
+    "zhTitle": "專家挖寶人！",
+    "enTitle": "Expert Excavator!",
+    "desc": "挖出50個寶箱。",
+    "requirement": "挖掘50個埋藏的寶藏。",
+    "weight": 5,
+    "globalPercent": 3.0,
+    "exophasePercent": 5.02,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/5/59/Expert_Excavator%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "81",
+    "steamName": "ach_beeCaptures_1",
+    "title": "新手愛蜂人！ (Beginner Bee-nevolent!)",
+    "zhTitle": "新手愛蜂人！",
+    "enTitle": "Beginner Bee-nevolent!",
+    "desc": "捕捉1隻蜜蜂。",
+    "requirement": "使用 捕蟲網 捕捉1個 蜜蜂群 。",
+    "weight": 30,
+    "globalPercent": 30.6,
+    "exophasePercent": 37.23,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/7/7f/Beginner_Bee-nevolent%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "82",
+    "steamName": "ach_beeCaptures_10",
+    "title": "中級愛蜂人！ (Intermediate Bee-nevolent!)",
+    "zhTitle": "中級愛蜂人！",
+    "enTitle": "Intermediate Bee-nevolent!",
+    "desc": "捕捉10隻蜜蜂。",
+    "requirement": "使用 捕蟲網 捕捉10個 蜜蜂群 。",
+    "weight": 18,
+    "globalPercent": 15.9,
+    "exophasePercent": 20.57,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/e/e8/Intermediate_Bee-nevolent%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "83",
+    "steamName": "ach_beeCaptures_25",
+    "title": "專家愛蜂人！ (Expert Bee-nevolent!)",
+    "zhTitle": "專家愛蜂人！",
+    "enTitle": "Expert Bee-nevolent!",
+    "desc": "捕捉25隻蜜蜂。",
+    "requirement": "使用 捕蟲網 捕捉25個 蜜蜂群 。",
+    "weight": 5,
+    "globalPercent": 4.9,
+    "exophasePercent": 7.58,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/0/07/Expert_Bee-nevolent%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "84",
+    "steamName": "ach_token_tangaroa_10",
+    "title": "小手筆！ (Small Spender!)",
+    "zhTitle": "小手筆！",
+    "enTitle": "Small Spender!",
+    "desc": "花費10個代幣。",
+    "requirement": "在自動販賣機使用10個 販賣機代幣 。",
+    "weight": 21,
+    "globalPercent": 22.1,
+    "exophasePercent": 27.72,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/b/b3/Small_Spender%21.jpg/revision/latest?cb=20240126133627&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "85",
+    "steamName": "ach_token_tangaroa_20",
+    "title": "中手筆！ (Medium Spender!)",
+    "zhTitle": "中手筆！",
+    "enTitle": "Medium Spender!",
+    "desc": "花費20個代幣。",
+    "requirement": "在自動販賣機使用20個 販賣機代幣 。",
+    "weight": 18,
+    "globalPercent": 16.1,
+    "exophasePercent": 20.65,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/8/88/Medium_Spender%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "86",
+    "steamName": "ach_token_tangaroa_30",
+    "title": "大手筆！ (Big Spender!)",
+    "zhTitle": "大手筆！",
+    "enTitle": "Big Spender!",
+    "desc": "花費30個代幣。",
+    "requirement": "在自動販賣機使用30個 販賣機代幣 。",
+    "weight": 15,
+    "globalPercent": 10.1,
+    "exophasePercent": 13.7,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/f/f8/Big_Spender%21.jpg/revision/latest?cb=20240126134320&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "87",
+    "steamName": "ach_firstPurchaseAtTrader",
+    "title": "新手商人！ (Beginner Merchant!)",
+    "zhTitle": "新手商人！",
+    "enTitle": "Beginner Merchant!",
+    "desc": "在 交易站 購買物品。",
+    "requirement": "-",
+    "weight": 23,
+    "globalPercent": 26.7,
+    "exophasePercent": 26.99,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/66/Beginner_Merchant%21.jpg/revision/latest?cb=20240126133626&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "88",
+    "steamName": "ach_tier2Trader",
+    "title": "中級商人！ (Intermediate Merchant!)",
+    "zhTitle": "中級商人！",
+    "enTitle": "Intermediate Merchant!",
+    "desc": "在 交易站 達到第2級。",
+    "requirement": "-",
+    "weight": 18,
+    "globalPercent": 16.8,
+    "exophasePercent": 18.02,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/2/2b/Intermediate_Merchant%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "89",
+    "steamName": "ach_tier3Trader",
+    "title": "專家商人！ (Expert Merchant!)",
+    "zhTitle": "專家商人！",
+    "enTitle": "Expert Merchant!",
+    "desc": "在 交易站 達到第3級。",
+    "requirement": "-",
+    "weight": 16,
+    "globalPercent": 12.6,
+    "exophasePercent": 13.95,
+    "category": "gathering",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/a/ac/Expert_Merchant%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "90",
+    "steamName": "ach_tiki_completed",
+    "title": "昔日榮光！ (Former Glory!)",
+    "zhTitle": "昔日榮光！",
+    "enTitle": "Former Glory!",
+    "desc": "修復四塊提基組成件。",
+    "requirement": "將四種 提基組成件 依正確順序堆疊成 提基柱 。",
+    "weight": 5,
+    "globalPercent": 1.1,
+    "exophasePercent": 3.13,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/c/c1/Former_Glory%21.jpg/revision/latest?cb=20240126134457&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "91",
+    "steamName": "ach_pipes_30",
+    "title": "水管工之力！ (Plumber Power!)",
+    "zhTitle": "水管工之力！",
+    "enTitle": "Plumber Power!",
+    "desc": "一次放置30個管道。",
+    "requirement": "一次放置30個 燃油管 或 水管 。",
+    "weight": 8,
+    "globalPercent": 7.5,
+    "exophasePercent": 10.16,
+    "category": "building",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/6/6b/Plumber_Power%21.jpg/revision/latest?cb=20240126134322&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "92",
+    "steamName": "ach_beekeeper_10",
+    "title": "養蜂人！ (Bee Keeper!)",
+    "zhTitle": "養蜂人！",
+    "enTitle": "Bee Keeper!",
+    "desc": "一次放置10個 蜂巢 。",
+    "requirement": "-",
+    "weight": 5,
+    "globalPercent": 2.1,
+    "exophasePercent": 4.51,
+    "category": "survival",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/e/ea/Bee_Keeper%21.jpg/revision/latest?cb=20240126134456&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "93",
+    "steamName": "ach_secret_tangaroa_claw",
+    "title": "裝箱！ (Boxed In!)",
+    "zhTitle": "裝箱！",
+    "enTitle": "Boxed In!",
+    "desc": "找出貨櫃背後的秘密。",
+    "requirement": "進入 唐加羅瓦 儲藏區的隱藏房間。",
+    "weight": 7,
+    "globalPercent": 7.1,
+    "exophasePercent": 10.86,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/c/c1/Boxed_In%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "94",
+    "steamName": "ach_instrument_notes_1",
+    "title": "演奏家！ (Instrumentalist!)",
+    "zhTitle": "演奏家！",
+    "enTitle": "Instrumentalist!",
+    "desc": "在鋼琴上彈奏一個音符。",
+    "requirement": "使用 鋼琴 。",
+    "weight": 18,
+    "globalPercent": 15.1,
+    "exophasePercent": 20.81,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/c/c4/Instrumentalist%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "95",
+    "steamName": "ach_tangaroa_cockpitLaunch",
+    "title": "發射升空！ (Launch Initiated!)",
+    "zhTitle": "發射升空！",
+    "enTitle": "Launch Initiated!",
+    "desc": "這是緊急備用系統？",
+    "requirement": "啟動 唐加羅瓦 艦橋的緊急發射系統。",
+    "weight": 22,
+    "globalPercent": 24.4,
+    "exophasePercent": 30.4,
+    "category": "story",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/4/42/Launch_Initiated%21.jpg/revision/latest?cb=20240126133627&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "96",
+    "steamName": "ach_fireworks_50",
+    "title": "真正的煙火！ (Real Fireworks!)",
+    "zhTitle": "真正的煙火！",
+    "enTitle": "Real Fireworks!",
+    "desc": "見證50次煙火爆炸。",
+    "requirement": "發射50個 焰火 。",
+    "weight": 5,
+    "globalPercent": 4.3,
+    "exophasePercent": 7.24,
+    "category": "special",
+    "hidden": false,
+    "icon": "https://static.wikia.nocookie.net/raft/images/f/fb/Real_Fireworks%21.jpg/revision/latest?cb=20240126134322&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "97",
+    "steamName": "ach_hidden_tangaroa_room",
+    "title": "閒人勿進！ (You Should Not Be Here!)",
+    "zhTitle": "閒人勿進！",
+    "enTitle": "You Should Not Be Here!",
+    "desc": "地下二十樓。",
+    "requirement": "進入 唐加羅瓦 電梯的隱藏房間。",
+    "weight": 7,
+    "globalPercent": 6.9,
+    "exophasePercent": 9.24,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/b/b5/You_Should_Not_Be_Here%21.jpg/revision/latest?cb=20240126134322&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "98",
+    "steamName": "ach_zip_OneGo",
+    "title": "一路到底！ (Zip Zap!)",
+    "zhTitle": "一路到底！",
+    "enTitle": "Zip Zap!",
+    "desc": "在滑索上不中斷滑行50公尺。",
+    "requirement": "-",
+    "weight": 20,
+    "globalPercent": 19.6,
+    "exophasePercent": 23.0,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/9e/Zip_Zap%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "99",
+    "steamName": "ach_allMysteryLootUnlocked",
+    "title": "翻新師！ (The Renovator!)",
+    "zhTitle": "翻新師！",
+    "enTitle": "The Renovator!",
+    "desc": "學習所有來自裝飾包的製作配方。",
+    "requirement": "解鎖以下66種物品： 床 垃圾桶 3種 椅子 3種 沙發 7種 椅子 3種 架子 3種 櫥櫃 金屬燈籠 火盆 火爐 4種 繪畫 4種 勵志語錄牌 玫瑰 向日葵 龜背竹 仙人掌 蘆薈 木槿 2種 書堆 打開的書 紙捆 2種 燭台 2種 燈串 刀叉 馬克杯 3種 地毯 7種 旗幟 羽毛筆 地球儀 1種 鍾 2種 窗簾 屋外廁所 木製浴缸 柴火架",
+    "weight": 31,
+    "globalPercent": 31.8,
+    "exophasePercent": 32.74,
+    "category": "gathering",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/1a/The_Renovator%21.jpg/revision/latest?cb=20240126133408&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "100",
+    "steamName": "ach_grabbersNest",
+    "title": "藏身處收藏家！ (Cache Collector!)",
+    "zhTitle": "藏身處收藏家！",
+    "enTitle": "Cache Collector!",
+    "desc": "找到瓦魯納角上的所有搶奪者藏身處。",
+    "requirement": "找到 瓦魯納角 的17個搶奪者標記。",
+    "weight": 8,
+    "globalPercent": 7.7,
+    "exophasePercent": 10.62,
+    "category": "gathering",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/5/5f/Cache_Collector%21.jpg/revision/latest?cb=20240126134321&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "101",
+    "steamName": "ach_allCharactersUnlocked",
+    "title": "全員登艦！ (All Aboard!)",
+    "zhTitle": "全員登艦！",
+    "enTitle": "All Aboard!",
+    "desc": "解鎖所有可玩角色。",
+    "requirement": "找到下列4個角色並與之對話： Tala - 在 無線電塔 頂端。 Johnny - 在 巴爾博亞島 的 6號廣播站 。 Elaine - 在 唐加羅瓦 的艦橋內。 Shogo - 在 唐普蘭斯 塞勒涅反應堆 最深處的房間。",
+    "weight": 17,
+    "globalPercent": 14.1,
+    "exophasePercent": 16.21,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/96/All_Aboard%21.jpg/revision/latest?cb=20240126133954&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "102",
+    "steamName": "ach_allFoodBuffs",
+    "title": "威力提升！ (Powered Up!)",
+    "zhTitle": "威力提升！",
+    "enTitle": "Powered Up!",
+    "desc": "同時擁有所有餐點和飲品的增益。",
+    "requirement": "同時擁有下列5種效果： 奢華鯰魚 ：跑步加速 鮭魚沙拉 ：提升氧氣條 豐盛燉菜 ：避免死亡一次 甜菜根汁 ：提升生命上限 辣菠蘿莓 ：游泳加速",
+    "weight": 5,
+    "globalPercent": 1.2,
+    "exophasePercent": 3.38,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/d/d0/Powered_Up%21.jpg/revision/latest?cb=20240126134457&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "103",
+    "steamName": "ach_snowmobileIsNotABoat",
+    "title": "那不是船 (... That's Not A Boat...)",
+    "zhTitle": "那不是船",
+    "enTitle": "... That's Not A Boat...",
+    "desc": "駕駛雪地摩托車進入大海。",
+    "requirement": "-",
+    "weight": 18,
+    "globalPercent": 16.1,
+    "exophasePercent": 18.6,
+    "category": "special",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/1/16/That%27s_Not_A_Boat....jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  },
+  {
+    "id": "104",
+    "steamName": "ach_finalCutscene",
+    "title": "有一座烏托邦！ (There Is A Utopia!)",
+    "zhTitle": "有一座烏托邦！",
+    "enTitle": "There Is A Utopia!",
+    "desc": "完成遊戲！",
+    "requirement": "完成 烏托邦 劇情。",
+    "weight": 17,
+    "globalPercent": 14.5,
+    "exophasePercent": 17.2,
+    "category": "story",
+    "hidden": true,
+    "icon": "https://static.wikia.nocookie.net/raft/images/9/94/There_Is_A_Utopia%21.jpg/revision/latest?cb=20240126133955&path-prefix=zh",
+    "active": true,
+    "completed": false
+  }
+];
+
+    const CATEGORY_NAMES = {
+      'story': '📜 劇情探索',
+      'combat': '🦈 狩獵戰鬥',
+      'building': '🔨 建造工藝',
+      'gathering': '🎣 收集經濟',
+      'survival': '🐑 生存牧業',
+      'special': '🎭 秘密彩蛋'
+    };
+
+    let achievements = [];
+    let currentStatusFilter = 'active';
+    let currentCategoryFilter = 'all';
+    let currentSearchText = '';
+    let currentWeightMode = 'steam'; // 'steam', 'equal', 'inverse', 'custom'
+    let isSpinning = false;
+    let currentRotation = 0;
+    let selectedWonItem = null;
+
+    // Web Audio API 音效合成器
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTickSound() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.035);
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.035);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.035);
+    }
+
+    function playWinSound() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const notes = [261.63, 329.63, 392.00, 523.25, 659.25];
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.09);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime + idx * 0.09);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + idx * 0.09 + 0.45);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + idx * 0.09);
+        osc.stop(audioCtx.currentTime + idx * 0.09 + 0.45);
+      });
+    }
+
+    // 初始化載入
+    function init() {
+      const saved = localStorage.getItem('raft_roulette_data');
+      const savedMode = localStorage.getItem('raft_roulette_weight_mode');
+      if (savedMode) {
+        currentWeightMode = savedMode;
+        const sel = document.getElementById('weightModeSelect');
+        if (sel) sel.value = savedMode;
+      }
+
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          // 若原有資料庫小於 50 筆（舊版24項樣例），自動升級至104全成就
+          if (Array.isArray(parsed) && parsed.length >= 100) {
+            achievements = parsed;
+          } else {
+            achievements = JSON.parse(JSON.stringify(DEFAULT_ACHIEVEMENTS));
+          }
+        } catch (e) {
+          achievements = JSON.parse(JSON.stringify(DEFAULT_ACHIEVEMENTS));
+        }
+      } else {
+        achievements = JSON.parse(JSON.stringify(DEFAULT_ACHIEVEMENTS));
+      }
+
+      setupEvents();
+      renderAll();
+    }
+
+    function saveData() {
+      localStorage.setItem('raft_roulette_data', JSON.stringify(achievements));
+      localStorage.setItem('raft_roulette_weight_mode', currentWeightMode);
+    }
+
+    function setupEvents() {
+      document.getElementById('spinBtn').addEventListener('click', spinWheel);
+      document.getElementById('centerSpinBtn').addEventListener('click', spinWheel);
+      document.getElementById('btnMarkWonComplete').addEventListener('click', () => {
+        if (selectedWonItem) {
+          toggleComplete(selectedWonItem.id, true);
+          closeResultModal();
+        }
+      });
+    }
+
+    // 取得當前模式下的計算權重
+    function getItemCalculatedWeight(item) {
+      const pct = (typeof item.globalPercent === 'number') ? item.globalPercent : 20.0;
+      if (currentWeightMode === 'steam') {
+        // Steam 全球達成率比重：達成率高者比重大，方便從基礎生存解起
+        if (pct >= 60) return 45 + Math.round((pct - 60) / 32 * 10);
+        if (pct >= 30) return 30 + Math.round((pct - 30) / 30 * 15);
+        if (pct >= 10) return 15 + Math.round((pct - 10) / 20 * 15);
+        return Math.max(5, Math.round(pct * 1.5));
+      } else if (currentWeightMode === 'equal') {
+        return 10;
+      } else if (currentWeightMode === 'inverse') {
+        // 反向地獄挑戰模式：最稀有的成就權重最高！
+        return Math.max(5, Math.round((100 - pct) * 0.8));
+      } else {
+        // 自訂權重
+        return Number(item.weight) || 10;
+      }
+    }
+
+    // 取得輪盤候選池（入盤且尚未完成）
+    function getActivePool() {
+      return achievements.filter(a => a.active && !a.completed);
+    }
+
+    // 動態計算機率
+    function getActivePoolWithProbabilities() {
+      const pool = getActivePool();
+      const totalWeight = pool.reduce((sum, item) => sum + getItemCalculatedWeight(item), 0);
+      return pool.map(item => ({
+        ...item,
+        calculatedWeight: getItemCalculatedWeight(item),
+        probability: totalWeight > 0 ? (getItemCalculatedWeight(item) / totalWeight) : 0
+      }));
+    }
+
+    // 轉盤繪製
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const SLICE_COLORS = [
+      '#1a3a5f', '#195e63', '#2d5a3f', '#735124',
+      '#632640', '#3b2f5b', '#1b4d70', '#564228',
+      '#205a50', '#633120', '#4a2d6b', '#254b38'
+    ];
+
+    function drawWheel() {
+      const width = canvas.width;
+      const height = canvas.height;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const radius = width / 2 - 20;
+
+      ctx.clearRect(0, 0, width, height);
+
+      const pool = getActivePoolWithProbabilities();
+
+      if (pool.length === 0) {
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.fillStyle = '#18273a';
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = '#8fa5b8';
+        ctx.font = 'bold 30px Microsoft JhengHei';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('目前輪盤中沒有候選成就！', 0, -20);
+        ctx.font = '22px Microsoft JhengHei';
+        ctx.fillText('請在右側勾選成就「入輪盤」或點擊快捷「全選入盤」', 0, 30);
+        ctx.restore();
+        return;
+      }
+
+      let startAngle = currentRotation;
+
+      for (let i = 0; i < pool.length; i++) {
+        const item = pool[i];
+        const sliceAngle = item.probability * 2 * Math.PI;
+        const endAngle = startAngle + sliceAngle;
+
+        // 扇形
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = SLICE_COLORS[i % SLICE_COLORS.length];
+        ctx.fill();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = '#090e15';
+        ctx.stroke();
+
+        // 僅當扇形角度夠大（> 0.035 弧度，約 2度）才繪製文字，避免過密重疊
+        if (sliceAngle > 0.035) {
+          ctx.save();
+          ctx.translate(centerX, centerY);
+          const middleAngle = startAngle + sliceAngle / 2;
+          ctx.rotate(middleAngle);
+          ctx.textAlign = 'right';
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = 'rgba(0,0,0,0.9)';
+          ctx.shadowBlur = 4;
+
+          // 動態字級：依扇區大小縮放
+          let fontSize = Math.min(20, Math.max(12, Math.floor(sliceAngle * 150)));
+          if (pool.length > 50) fontSize = Math.min(fontSize, 15);
+          ctx.font = `bold ${fontSize}px "Microsoft JhengHei", sans-serif`;
+
+          let displayTitle = item.zhTitle || item.title;
+          const maxChar = pool.length > 40 ? 10 : 14;
+          if (displayTitle.length > maxChar) displayTitle = displayTitle.substring(0, maxChar - 1) + '…';
+          const probStr = (item.probability * 100).toFixed(1) + '%';
+
+          ctx.fillText(`${displayTitle} (${probStr})`, radius - 35, fontSize * 0.35);
+          ctx.restore();
+        }
+
+        startAngle = endAngle;
+      }
+
+      // 外外環金屬刻度
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.lineWidth = 12;
+      ctx.strokeStyle = '#253d59';
+      ctx.stroke();
+
+      // 裝飾外圈外發光
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius + 6, 0, 2 * Math.PI);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(38, 198, 218, 0.4)';
+      ctx.stroke();
+    }
+
+    // 旋轉邏輯
+    function spinWheel() {
+      if (isSpinning) return;
+      const pool = getActivePoolWithProbabilities();
+      if (pool.length === 0) {
+        alert('請先在清單中勾選至少一個成就放入轉盤！');
+        return;
+      }
+
+      isSpinning = true;
+      document.getElementById('spinBtn').disabled = true;
+
+      // 隨機選定中獎項目 (依權重機率)
+      const rand = Math.random();
+      let cumulative = 0;
+      let winningIndex = 0;
+
+      for (let i = 0; i < pool.length; i++) {
+        cumulative += pool[i].probability;
+        if (rand <= cumulative) {
+          winningIndex = i;
+          break;
+        }
+      }
+
+      // 指針固定在正上方 (頂部 = 3*PI/2 = 1.5*PI)
+      let prevAngleSum = 0;
+      for (let i = 0; i < winningIndex; i++) {
+        prevAngleSum += pool[i].probability * 2 * Math.PI;
+      }
+      const sliceAngle = pool[winningIndex].probability * 2 * Math.PI;
+      const targetMidSlice = prevAngleSum + sliceAngle / 2;
+
+      const pointerAngle = 1.5 * Math.PI;
+      const extraRounds = 6 + Math.floor(Math.random() * 3);
+      const totalSpinAngle = extraRounds * 2 * Math.PI + (pointerAngle - (targetMidSlice % (2 * Math.PI)));
+
+      const duration = 5000;
+      const startAngle = currentRotation % (2 * Math.PI);
+      const finalAngle = startAngle + totalSpinAngle;
+      const startTime = performance.now();
+      let lastTickAngle = startAngle;
+
+      function animateSpin(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Cubic Ease-Out
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        currentRotation = startAngle + (finalAngle - startAngle) * easeOut;
+
+        // 碰觸指針聲響
+        if (Math.abs(currentRotation - lastTickAngle) > 0.22) {
+          playTickSound();
+          lastTickAngle = currentRotation;
+        }
+
+        drawWheel();
+
+        if (progress < 1) {
+          requestAnimationFrame(animateSpin);
+        } else {
+          isSpinning = false;
+          document.getElementById('spinBtn').disabled = false;
+          showWinner(pool[winningIndex]);
+        }
+      }
+
+      requestAnimationFrame(animateSpin);
+    }
+
+    function spinAgain() {
+      closeResultModal();
+      setTimeout(() => {
+        spinWheel();
+      }, 250);
+    }
+
+    // 彈出中獎畫面
+    function showWinner(item) {
+      selectedWonItem = item;
+      document.getElementById('winnerTitle').textContent = item.zhTitle || item.title;
+      document.getElementById('winnerEn').textContent = item.enTitle || '';
+      document.getElementById('winnerDescText').textContent = item.desc || "解鎖這項榮耀成就！";
+      document.getElementById('winnerReqText').textContent = item.requirement ? "💡 達成條件：" + item.requirement : '';
+
+      const imgEl = document.getElementById('winnerIcon');
+      if (item.icon) {
+        imgEl.src = item.icon;
+        imgEl.style.display = 'block';
+      } else {
+        imgEl.style.display = 'none';
+      }
+
+      const pct = (typeof item.globalPercent === 'number') ? item.globalPercent : 0;
+      let diffHtml = '';
+      if (pct >= 60) diffHtml = '<span class="badge badge-diff-easy">🟢 極易常見 (' + pct + '%)</span>';
+      else if (pct >= 30) diffHtml = '<span class="badge badge-diff-medium">🟡 中等普通 (' + pct + '%)</span>';
+      else if (pct >= 10) diffHtml = '<span class="badge badge-diff-hard">🟠 困難挑戰 (' + pct + '%)</span>';
+      else diffHtml = '<span class="badge badge-diff-hell">💀 極限稀有 (' + pct + '%)</span>';
+
+      const catName = CATEGORY_NAMES[item.category] || '成就';
+      let badgesHtml = `<span class="badge badge-cat">${catName}</span> ${diffHtml}`;
+      if (item.hidden) badgesHtml += `<span class="badge badge-hidden">🔒 隱藏成就</span>`;
+
+      document.getElementById('winnerBadges').innerHTML = badgesHtml;
+      document.getElementById('resultModal').classList.add('active');
+
+      playWinSound();
+      launchConfetti();
+    }
+
+    function closeResultModal() {
+      document.getElementById('resultModal').classList.remove('active');
+    }
+
+    // 渲染成就列表
+    function renderList() {
+      const container = document.getElementById('achievementListContainer');
+      container.innerHTML = '';
+
+      const poolWithProb = getActivePoolWithProbabilities();
+      const probMap = new Map(poolWithProb.map(p => [p.id, p.probability]));
+
+      // 依條件篩選
+      let filtered = achievements.filter(item => {
+        // 狀態分頁
+        if (currentStatusFilter === 'active' && (!item.active || item.completed)) return false;
+        if (currentStatusFilter === 'uncompleted' && item.completed) return false;
+        if (currentStatusFilter === 'completed' && !item.completed) return false;
+
+        // 分類篩選
+        if (currentCategoryFilter !== 'all' && item.category !== currentCategoryFilter) return false;
+
+        // 搜尋
+        if (currentSearchText) {
+          const q = currentSearchText.toLowerCase();
+          const matchTitle = (item.title || '').toLowerCase().includes(q);
+          const matchZh = (item.zhTitle || '').toLowerCase().includes(q);
+          const matchEn = (item.enTitle || '').toLowerCase().includes(q);
+          const matchDesc = (item.desc || '').toLowerCase().includes(q);
+          const matchReq = (item.requirement || '').toLowerCase().includes(q);
+          if (!matchTitle && !matchZh && !matchEn && !matchDesc && !matchReq) return false;
+        }
+
+        return true;
+      });
+
+      document.getElementById('filterResultCount').textContent = `顯示 ${filtered.length} / 104 個成就`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding: 45px; color: var(--text-muted); font-size: 0.95rem;">查無符合條件的成就</div>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `achievement-item ${item.completed ? 'completed' : ''}`;
+
+        const prob = probMap.get(item.id);
+        const probText = (prob !== undefined) ? `${(prob * 100).toFixed(1)}%` : '--%';
+
+        const pct = (typeof item.globalPercent === 'number') ? item.globalPercent : 0;
+        let diffBadge = '';
+        if (pct >= 60) diffBadge = `<span class="badge badge-diff-easy">易</span>`;
+        else if (pct >= 30) diffBadge = `<span class="badge badge-diff-medium">中</span>`;
+        else if (pct >= 10) diffBadge = `<span class="badge badge-diff-hard">難</span>`;
+        else diffBadge = `<span class="badge badge-diff-hell">極</span>`;
+
+        const catName = CATEGORY_NAMES[item.category] || '';
+        const catBadge = catName ? `<span class="badge badge-cat">${catName.split(' ')[1] || catName}</span>` : '';
+        const hiddenBadge = item.hidden ? `<span class="badge badge-hidden" title="遊戲中為隱藏成就">🔒</span>` : '';
+
+        const iconHtml = item.icon
+          ? `<img src="${escapeHtml(item.icon)}" alt="icon" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='⚓'">`
+          : `<span>⚓</span>`;
+
+        div.innerHTML = `
+          <div class="item-left">
+            <input type="checkbox" class="item-checkbox" title="標記完成狀態" ${item.completed ? 'checked' : ''} onchange="toggleComplete('${item.id}', this.checked)">
+            <div class="item-icon-wrap">${iconHtml}</div>
+            <div class="item-info">
+              <div class="item-title-row">
+                <span class="item-title">${escapeHtml(item.zhTitle || item.title)}</span>
+                <span class="item-en-title">${escapeHtml(item.enTitle || '')}</span>
+                ${catBadge}
+                ${diffBadge}
+                <span class="badge badge-rate" title="Steam 官方全球玩家達成率">🌐 ${pct}%</span>
+                ${hiddenBadge}
+              </div>
+              <div class="item-desc">${escapeHtml(item.desc || '')}</div>
+              ${item.requirement ? `<div class="item-req">💡 ${escapeHtml(item.requirement)}</div>` : ''}
+            </div>
+          </div>
+          <div class="item-right">
+            <label class="in-wheel-toggle" title="是否包含在此次命運轉盤候選中">
+              <input type="checkbox" ${item.active ? 'checked' : ''} onchange="toggleActive('${item.id}', this.checked)"> 入輪盤
+            </label>
+            <div class="probability-badge" title="動態重分配後的命中機率">${probText}</div>
+            <div class="action-icons">
+              <button class="icon-btn" title="編輯成就" onclick="openEditModal('${item.id}')">✏️</button>
+              <button class="icon-btn delete" title="從清單移除" onclick="deleteAchievement('${item.id}')">🗑️</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderStats() {
+      const total = achievements.length;
+      const completed = achievements.filter(a => a.completed).length;
+      const inWheel = achievements.filter(a => a.active && !a.completed).length;
+      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+      document.getElementById('statRemaining').textContent = total - completed;
+      document.getElementById('statInWheel').textContent = inWheel;
+      document.getElementById('statCompleted').textContent = completed;
+
+      document.getElementById('progressText').textContent = `${completed} / ${total} (${pct}%)`;
+      document.getElementById('progressBarFill').style.width = `${pct}%`;
+    }
+
+    function renderAll() {
+      drawWheel();
+      renderList();
+      renderStats();
+      saveData();
+    }
+
+    // 項目操作
+    function toggleComplete(id, completed) {
+      const item = achievements.find(a => a.id === id);
+      if (item) {
+        item.completed = completed;
+        renderAll();
+      }
+    }
+
+    function toggleActive(id, active) {
+      const item = achievements.find(a => a.id === id);
+      if (item) {
+        item.active = active;
+        renderAll();
+      }
+    }
+
+    function deleteAchievement(id) {
+      if (confirm('確定要從成就庫移除此成就嗎？')) {
+        achievements = achievements.filter(a => a.id !== id);
+        renderAll();
+      }
+    }
+
+    // 篩選與搜尋
+    function setStatusFilter(status) {
+      currentStatusFilter = status;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderList();
+    }
+
+    function setCategoryFilter(cat) {
+      currentCategoryFilter = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderList();
+    }
+
+    function handleSearch(val) {
+      currentSearchText = val.trim();
+      renderList();
+    }
+
+    // 切換比重模式
+    function changeWeightMode(mode) {
+      currentWeightMode = mode;
+      renderAll();
+    }
+
+    // 快捷挑選操作
+    function quickSelectRandom(count) {
+      const uncompleted = achievements.filter(a => !a.completed);
+      if (uncompleted.length === 0) {
+        alert('太強了！所有成就都已完成！');
+        return;
+      }
+      // 先將全部設為 false
+      achievements.forEach(a => a.active = false);
+      // 洗牌抽樣
+      const shuffled = [...uncompleted].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, count);
+      selected.forEach(a => a.active = true);
+      renderAll();
+    }
+
+    function quickSelectCategory() {
+      if (currentCategoryFilter === 'all') {
+        alert('請先在清單上方點選特定分類（例如：劇情、戰鬥、建造等）！');
+        return;
+      }
+      achievements.forEach(a => {
+        if (a.category === currentCategoryFilter && !a.completed) {
+          a.active = true;
+        } else {
+          a.active = false;
+        }
+      });
+      renderAll();
+    }
+
+    function setAllWheel(activeState) {
+      achievements.forEach(a => {
+        if (!a.completed) {
+          a.active = activeState;
+        }
+      });
+      renderAll();
+    }
+
+    // 新增 / 編輯 Modal 控制
+    function openAddModal() {
+      document.getElementById('editItemId').value = '';
+      document.getElementById('modalTitleText').textContent = '新增自訂成就';
+      document.getElementById('achieveZhTitle').value = '';
+      document.getElementById('achieveEnTitle').value = '';
+      document.getElementById('achieveCategory').value = 'story';
+      document.getElementById('achieveDesc').value = '';
+      document.getElementById('achieveReq').value = '';
+      document.getElementById('achieveWeight').value = '30';
+      document.getElementById('addModal').classList.add('active');
+    }
+
+    function openEditModal(id) {
+      const item = achievements.find(a => a.id === id);
+      if (!item) return;
+      document.getElementById('editItemId').value = item.id;
+      document.getElementById('modalTitleText').textContent = '編輯成就：' + (item.zhTitle || item.title);
+      document.getElementById('achieveZhTitle').value = item.zhTitle || item.title;
+      document.getElementById('achieveEnTitle').value = item.enTitle || '';
+      document.getElementById('achieveCategory').value = item.category || 'story';
+      document.getElementById('achieveDesc').value = item.desc || '';
+      document.getElementById('achieveReq').value = item.requirement || '';
+      document.getElementById('achieveWeight').value = item.weight || '30';
+      document.getElementById('addModal').classList.add('active');
+    }
+
+    function closeAddModal() {
+      document.getElementById('addModal').classList.remove('active');
+    }
+
+    function handleSaveAchievement(e) {
+      e.preventDefault();
+      const id = document.getElementById('editItemId').value;
+      const zhTitle = document.getElementById('achieveZhTitle').value.trim();
+      const enTitle = document.getElementById('achieveEnTitle').value.trim();
+      const category = document.getElementById('achieveCategory').value;
+      const desc = document.getElementById('achieveDesc').value.trim();
+      const req = document.getElementById('achieveReq').value.trim();
+      const weight = Number(document.getElementById('achieveWeight').value) || 30;
+
+      if (!zhTitle) return;
+
+      if (id) {
+        const item = achievements.find(a => a.id === id);
+        if (item) {
+          item.zhTitle = zhTitle;
+          item.enTitle = enTitle;
+          item.title = enTitle ? `${zhTitle} (${enTitle})` : zhTitle;
+          item.category = category;
+          item.desc = desc;
+          item.requirement = req;
+          item.weight = weight;
+        }
+      } else {
+        achievements.unshift({
+          id: Date.now().toString(),
+          title: enTitle ? `${zhTitle} (${enTitle})` : zhTitle,
+          zhTitle,
+          enTitle,
+          desc,
+          requirement: req,
+          category,
+          weight,
+          globalPercent: 25.0,
+          hidden: false,
+          active: true,
+          completed: false
+        });
+      }
+
+      closeAddModal();
+      renderAll();
+    }
+
+    // 匯出 / 匯入 / 重置
+    function exportData() {
+      const jsonStr = JSON.stringify(achievements, null, 2);
+      navigator.clipboard.writeText(jsonStr).then(() => {
+        alert('成就進度 JSON 已複製到剪貼簿！可傳送給朋友共享或存檔。');
+      }).catch(() => {
+        prompt('請手動複製以下 JSON 進度資料：', jsonStr);
+      });
+    }
+
+    function importDataModal() {
+      document.getElementById('importJsonText').value = '';
+      document.getElementById('importModal').classList.add('active');
+    }
+
+    function closeImportModal() {
+      document.getElementById('importModal').classList.remove('active');
+    }
+
+    function confirmImport() {
+      const text = document.getElementById('importJsonText').value.trim();
+      try {
+        const parsed = JSON.parse(text);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          achievements = parsed;
+          closeImportModal();
+          renderAll();
+          alert(`成功匯入 ${parsed.length} 項成就進度！`);
+        } else {
+          alert('格式錯誤：必須是成就陣列 JSON！');
+        }
+      } catch (err) {
+        alert('JSON 解析失敗，請確認格式正確。');
+      }
+    }
+
+    function resetToDefault() {
+      if (confirm('確定要重置為預設的 104 全成就清單嗎？目前的打勾進度會被重設。')) {
+        achievements = JSON.parse(JSON.stringify(DEFAULT_ACHIEVEMENTS));
+        renderAll();
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // 彩帶煙火特效
+    function launchConfetti() {
+      const cCanvas = document.getElementById('confettiCanvas');
+      const cCtx = cCanvas.getContext('2d');
+      cCanvas.width = window.innerWidth;
+      cCanvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ['#26c6da', '#ffd54f', '#ef5350', '#66bb6a', '#ab47bc', '#00e5ff'];
+
+      for (let i = 0; i < 110; i++) {
+        particles.push({
+          x: cCanvas.width / 2,
+          y: cCanvas.height / 2,
+          vx: (Math.random() - 0.5) * 18,
+          vy: (Math.random() - 0.5) * 18 - 4,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          gravity: 0.25,
+          alpha: 1
+        });
+      }
+
+      function drawParticles() {
+        cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+        let active = false;
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += p.gravity;
+          p.alpha -= 0.012;
+          if (p.alpha > 0) {
+            active = true;
+            cCtx.save();
+            cCtx.globalAlpha = p.alpha;
+            cCtx.fillStyle = p.color;
+            cCtx.fillRect(p.x, p.y, p.size, p.size);
+            cCtx.restore();
+          }
+        });
+
+        if (active) {
+          requestAnimationFrame(drawParticles);
+        } else {
+          cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+        }
+      }
+
+      drawParticles();
+    }
+
+    window.addEventListener('resize', () => {
+      drawWheel();
+    });
+
+    init();
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🦈 RAFT 全成就命運轉盤 (104全成就完整收錄・Steam官方全球達成率數據)</title>
+  <title>🦈 RAFT 全成就命運轉盤 (104全成就・跨裝置雲端同步・Steam全球達成率)</title>
   <style>
     :root {
       --bg-primary: #0a1118;
@@ -39,15 +39,15 @@
 
     /* 頂部導覽列 */
     header {
-      padding: 1rem 2rem;
-      background: rgba(10, 17, 24, 0.9);
+      padding: 0.9rem 1.8rem;
+      background: rgba(10, 17, 24, 0.92);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 12px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
       position: sticky;
       top: 0;
@@ -55,7 +55,7 @@
     }
 
     .title-area h1 {
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -64,14 +64,14 @@
     }
 
     .title-area p {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 3px;
     }
 
     .header-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
@@ -84,8 +84,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
     .btn-primary {
@@ -113,6 +114,26 @@
     }
     .btn-success:hover {
       background: #388e3c;
+    }
+
+    .btn-cloud {
+      background: linear-gradient(135deg, #1976d2 0%, #0288d1 100%);
+      color: white;
+      border: 1px solid rgba(38, 198, 218, 0.4);
+    }
+    .btn-cloud:hover {
+      box-shadow: 0 0 12px rgba(2, 136, 209, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .btn-sync {
+      background: linear-gradient(135deg, #7b1fa2 0%, #512da8 100%);
+      color: white;
+      border: 1px solid rgba(171, 71, 188, 0.4);
+    }
+    .btn-sync:hover {
+      box-shadow: 0 0 12px rgba(171, 71, 188, 0.6);
+      transform: translateY(-1px);
     }
 
     .btn-sm {
@@ -148,7 +169,7 @@
       flex-direction: column;
       align-items: center;
       position: sticky;
-      top: 85px;
+      top: 75px;
       height: fit-content;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
     }
@@ -246,6 +267,21 @@
       transform: none;
     }
 
+    /* 雲端狀態橫條 */
+    .cloud-sync-status-bar {
+      width: 100%;
+      margin-top: 10px;
+      padding: 6px 10px;
+      background: rgba(2, 136, 209, 0.1);
+      border: 1px dashed rgba(2, 136, 209, 0.35);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #81d4fa;
+    }
+
     /* 模式切換與快捷操作 */
     .wheel-settings {
       width: 100%;
@@ -253,7 +289,7 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 12px;
-      margin-top: 14px;
+      margin-top: 10px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -725,6 +761,8 @@
       box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
       position: relative;
       animation: popIn 0.22s ease-out;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     @keyframes popIn {
@@ -826,6 +864,62 @@
       border-color: var(--accent);
     }
 
+    /* 雲端同步視窗樣式 */
+    .qr-container {
+      background: white;
+      padding: 12px;
+      border-radius: 12px;
+      width: 200px;
+      height: 200px;
+      margin: 12px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    .qr-container img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .sync-hint-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1976d2;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      z-index: 200;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
     .celebration-canvas {
       position: fixed;
       top: 0;
@@ -843,12 +937,14 @@
   <header>
     <div class="title-area">
       <h1>🦈 RAFT 全成就命運轉盤</h1>
-      <p>收錄 104 個全成就・Steam官方全球達成率數據・動態權重運算・挑戰通關</p>
+      <p>104個全成就收錄・跨裝置雲端同步・Steam官方全球達成率數據</p>
     </div>
     <div class="header-actions">
-      <button class="btn btn-secondary" onclick="exportData()">💾 匯出進度</button>
-      <button class="btn btn-secondary" onclick="importDataModal()">📥 匯入進度</button>
-      <button class="btn btn-secondary" onclick="resetToDefault()">🔄 重置104全成就</button>
+      <button class="btn btn-sync" onclick="openQrSyncModal()">📱 跨裝置/手機同步</button>
+      <button class="btn btn-cloud" onclick="openCloudModal()">☁️ 雲端自動同步</button>
+      <button class="btn btn-secondary" onclick="exportData()">💾 匯出</button>
+      <button class="btn btn-secondary" onclick="importDataModal()">📥 匯入</button>
+      <button class="btn btn-secondary" onclick="resetToDefault()">🔄 重置</button>
     </div>
   </header>
 
@@ -864,6 +960,12 @@
       </div>
 
       <button class="btn-spin" id="spinBtn">🎲 開始命運轉盤！</button>
+
+      <!-- 雲端連線狀態指示條 -->
+      <div class="cloud-sync-status-bar" id="cloudStatusBar">
+        <span id="cloudStatusText">☁️ 雲端同步：本機存檔模式</span>
+        <button class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.7rem;" onclick="triggerCloudSync()">立即上傳/同步</button>
+      </div>
 
       <!-- 轉盤權重模式與快捷操作 -->
       <div class="wheel-settings">
@@ -951,6 +1053,100 @@
       </div>
     </div>
   </main>
+
+  <!-- 浮動提示 Toast -->
+  <div class="toast-msg" id="toastBox">
+    <span id="toastText">✅ 進度已同步！</span>
+  </div>
+
+  <!-- 跨裝置 / 手機 QR Code 秒同步彈窗 -->
+  <div class="modal-overlay" id="qrSyncModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>📱 跨裝置 / 手機秒速同步</h2>
+        <button class="icon-btn" onclick="closeQrSyncModal()">✕</button>
+      </div>
+      <div class="sync-hint-box">
+        💡 <b>一秒同步！</b> 系統已將你目前的 104 項成就打勾與輪盤狀態壓縮為專屬網址。拿起手機打開相機直接掃描下方 QR Code，手機就會瞬間打開並載入一模一樣的進度！
+      </div>
+
+      <div class="qr-container">
+        <img id="qrCodeImg" src="" alt="同步 QR Code">
+      </div>
+
+      <div class="form-group" style="margin-top: 14px;">
+        <label>專屬同步網址 (可直接傳送到 LINE、Discord 或瀏覽器開啟)：</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="syncUrlInput" class="form-input" readonly>
+          <button class="btn btn-primary" onclick="copySyncUrl()">📋 複製網址</button>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+        <button class="btn btn-secondary" onclick="closeQrSyncModal()">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 雲端全自動同步 (GitHub Gist) 彈窗 -->
+  <div class="modal-overlay" id="cloudModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>☁️ GitHub 雲端自動雙向同步</h2>
+        <button class="icon-btn" onclick="closeCloudModal()">✕</button>
+      </div>
+
+      <div class="sync-hint-box">
+        🔑 <b>如何讓電腦與手機永遠看同一份紀錄？</b><br>
+        利用 GitHub 官方免費私有 Gist 存放你的成就進度。只要綁定一次，此後在任何電腦或手機修改，都會自動雙向即時上傳與同步更新！
+      </div>
+
+      <div id="cloudUnboundSection">
+        <div class="form-group">
+          <label>GitHub Personal Access Token (PAT 權杖)：</label>
+          <input type="password" id="cloudTokenInput" class="form-input" placeholder="請貼上你的 ghp_ 開頭 Token (需勾選 gist 權限)">
+          <div style="font-size: 0.76rem; color: var(--accent); margin-top: 5px;">
+            👉 <a href="https://github.com/settings/tokens/new?scopes=gist&description=Raft+Wheel+Sync" target="_blank" style="color: var(--accent); text-decoration: underline;">點此前往 GitHub 免費產生 Token (已自動勾選 gist)</a>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button class="btn btn-secondary" onclick="closeCloudModal()">取消</button>
+          <button class="btn btn-primary" onclick="initCloudGist()">🚀 建立並綁定專屬雲端存檔</button>
+        </div>
+      </div>
+
+      <div id="cloudBoundSection" style="display: none;">
+        <div style="background: rgba(46, 125, 50, 0.2); border: 1px solid rgba(76, 175, 80, 0.4); padding: 12px; border-radius: 8px; margin-bottom: 14px;">
+          <div style="font-weight: 700; color: #81c784;">✅ 已成功連結 GitHub 雲端存檔！</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Gist ID: <span id="boundGistId" style="font-family: monospace; color: white;"></span></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">最後同步時間：<span id="boundLastSync">尚未同步</span></div>
+        </div>
+
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;">
+          <button class="btn btn-cloud" onclick="uploadToCloud(true)">☁️ 立即上傳至雲端</button>
+          <button class="btn btn-secondary" onclick="downloadFromCloud(true)">📥 從雲端拉取最新進度</button>
+        </div>
+
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+            <input type="checkbox" id="autoSyncCheck" onchange="toggleAutoSync(this.checked)" style="accent-color: var(--accent); transform: scale(1.15);">
+            變更時自動同步到雲端 (建議開啟)
+          </label>
+        </div>
+
+        <div class="sync-hint-box" style="margin-top: 10px;">
+          📲 <b>讓手機也連結同一個雲端：</b><br>
+          點擊下方按鈕產生「包含雲端金鑰的專屬 QR 碼」，用手機掃描後，手機也會自動綁定同一個雲端存檔！
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+          <button class="btn btn-secondary btn-sm" onclick="disconnectCloud()" style="color: var(--danger);">解除綁定</button>
+          <button class="btn btn-sync" onclick="openQrWithCloud()">📱 產生手機雲端綁定 QR Code</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- 煙火畫布 -->
   <canvas id="confettiCanvas" class="celebration-canvas"></canvas>
@@ -2839,6 +3035,12 @@
     let currentRotation = 0;
     let selectedWonItem = null;
 
+    // 雲端同步設定 (GitHub Gist)
+    let cloudToken = localStorage.getItem('raft_cloud_token') || '';
+    let cloudGistId = localStorage.getItem('raft_cloud_gist_id') || '';
+    let autoCloudSync = localStorage.getItem('raft_auto_cloud_sync') === 'true';
+    let isSyncing = false;
+
     // Web Audio API 音效合成器
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playTickSound() {
@@ -2872,6 +3074,15 @@
       });
     }
 
+    function showToast(msg) {
+      const toast = document.getElementById('toastBox');
+      document.getElementById('toastText').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
     // 初始化載入
     function init() {
       const saved = localStorage.getItem('raft_roulette_data');
@@ -2885,7 +3096,6 @@
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          // 若原有資料庫小於 50 筆（舊版24項樣例），自動升級至104全成就
           if (Array.isArray(parsed) && parsed.length >= 100) {
             achievements = parsed;
           } else {
@@ -2899,12 +3109,35 @@
       }
 
       setupEvents();
+      updateCloudUI();
+
+      // 檢查網址是否有跨裝置傳遞的存檔 (URL Hash #s=...)
+      checkUrlStateSync();
+
       renderAll();
+
+      // 如果已啟用雲端自動同步，啟動時拉取最新版
+      if (cloudGistId && cloudToken && autoCloudSync) {
+        downloadFromCloud(false);
+      }
     }
 
     function saveData() {
       localStorage.setItem('raft_roulette_data', JSON.stringify(achievements));
       localStorage.setItem('raft_roulette_weight_mode', currentWeightMode);
+
+      // 若開啟雲端自動同步，背景同步上傳
+      if (autoCloudSync && cloudGistId && cloudToken && !isSyncing) {
+        debounceCloudUpload();
+      }
+    }
+
+    let debounceTimer = null;
+    function debounceCloudUpload() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        uploadToCloud(false);
+      }, 1200);
     }
 
     function setupEvents() {
@@ -2922,7 +3155,6 @@
     function getItemCalculatedWeight(item) {
       const pct = (typeof item.globalPercent === 'number') ? item.globalPercent : 20.0;
       if (currentWeightMode === 'steam') {
-        // Steam 全球達成率比重：達成率高者比重大，方便從基礎生存解起
         if (pct >= 60) return 45 + Math.round((pct - 60) / 32 * 10);
         if (pct >= 30) return 30 + Math.round((pct - 30) / 30 * 15);
         if (pct >= 10) return 15 + Math.round((pct - 10) / 20 * 15);
@@ -2930,20 +3162,16 @@
       } else if (currentWeightMode === 'equal') {
         return 10;
       } else if (currentWeightMode === 'inverse') {
-        // 反向地獄挑戰模式：最稀有的成就權重最高！
         return Math.max(5, Math.round((100 - pct) * 0.8));
       } else {
-        // 自訂權重
         return Number(item.weight) || 10;
       }
     }
 
-    // 取得輪盤候選池（入盤且尚未完成）
     function getActivePool() {
       return achievements.filter(a => a.active && !a.completed);
     }
 
-    // 動態計算機率
     function getActivePoolWithProbabilities() {
       const pool = getActivePool();
       const totalWeight = pool.reduce((sum, item) => sum + getItemCalculatedWeight(item), 0);
@@ -3000,7 +3228,6 @@
         const sliceAngle = item.probability * 2 * Math.PI;
         const endAngle = startAngle + sliceAngle;
 
-        // 扇形
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, startAngle, endAngle);
@@ -3011,7 +3238,6 @@
         ctx.strokeStyle = '#090e15';
         ctx.stroke();
 
-        // 僅當扇形角度夠大（> 0.035 弧度，約 2度）才繪製文字，避免過密重疊
         if (sliceAngle > 0.035) {
           ctx.save();
           ctx.translate(centerX, centerY);
@@ -3022,7 +3248,6 @@
           ctx.shadowColor = 'rgba(0,0,0,0.9)';
           ctx.shadowBlur = 4;
 
-          // 動態字級：依扇區大小縮放
           let fontSize = Math.min(20, Math.max(12, Math.floor(sliceAngle * 150)));
           if (pool.length > 50) fontSize = Math.min(fontSize, 15);
           ctx.font = `bold ${fontSize}px "Microsoft JhengHei", sans-serif`;
@@ -3039,14 +3264,13 @@
         startAngle = endAngle;
       }
 
-      // 外外環金屬刻度
+      // 外環刻度
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
       ctx.lineWidth = 12;
       ctx.strokeStyle = '#253d59';
       ctx.stroke();
 
-      // 裝飾外圈外發光
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius + 6, 0, 2 * Math.PI);
       ctx.lineWidth = 2;
@@ -3054,7 +3278,6 @@
       ctx.stroke();
     }
 
-    // 旋轉邏輯
     function spinWheel() {
       if (isSpinning) return;
       const pool = getActivePoolWithProbabilities();
@@ -3066,7 +3289,6 @@
       isSpinning = true;
       document.getElementById('spinBtn').disabled = true;
 
-      // 隨機選定中獎項目 (依權重機率)
       const rand = Math.random();
       let cumulative = 0;
       let winningIndex = 0;
@@ -3079,7 +3301,6 @@
         }
       }
 
-      // 指針固定在正上方 (頂部 = 3*PI/2 = 1.5*PI)
       let prevAngleSum = 0;
       for (let i = 0; i < winningIndex; i++) {
         prevAngleSum += pool[i].probability * 2 * Math.PI;
@@ -3101,11 +3322,9 @@
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
 
-        // Cubic Ease-Out
         const easeOut = 1 - Math.pow(1 - progress, 3);
         currentRotation = startAngle + (finalAngle - startAngle) * easeOut;
 
-        // 碰觸指針聲響
         if (Math.abs(currentRotation - lastTickAngle) > 0.22) {
           playTickSound();
           lastTickAngle = currentRotation;
@@ -3132,7 +3351,6 @@
       }, 250);
     }
 
-    // 彈出中獎畫面
     function showWinner(item) {
       selectedWonItem = item;
       document.getElementById('winnerTitle').textContent = item.zhTitle || item.title;
@@ -3170,7 +3388,7 @@
       document.getElementById('resultModal').classList.remove('active');
     }
 
-    // 渲染成就列表
+    // 渲染清單
     function renderList() {
       const container = document.getElementById('achievementListContainer');
       container.innerHTML = '';
@@ -3178,17 +3396,13 @@
       const poolWithProb = getActivePoolWithProbabilities();
       const probMap = new Map(poolWithProb.map(p => [p.id, p.probability]));
 
-      // 依條件篩選
       let filtered = achievements.filter(item => {
-        // 狀態分頁
         if (currentStatusFilter === 'active' && (!item.active || item.completed)) return false;
         if (currentStatusFilter === 'uncompleted' && item.completed) return false;
         if (currentStatusFilter === 'completed' && !item.completed) return false;
 
-        // 分類篩選
         if (currentCategoryFilter !== 'all' && item.category !== currentCategoryFilter) return false;
 
-        // 搜尋
         if (currentSearchText) {
           const q = currentSearchText.toLowerCase();
           const matchTitle = (item.title || '').toLowerCase().includes(q);
@@ -3308,7 +3522,6 @@
       }
     }
 
-    // 篩選與搜尋
     function setStatusFilter(status) {
       currentStatusFilter = status;
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -3328,22 +3541,18 @@
       renderList();
     }
 
-    // 切換比重模式
     function changeWeightMode(mode) {
       currentWeightMode = mode;
       renderAll();
     }
 
-    // 快捷挑選操作
     function quickSelectRandom(count) {
       const uncompleted = achievements.filter(a => !a.completed);
       if (uncompleted.length === 0) {
         alert('太強了！所有成就都已完成！');
         return;
       }
-      // 先將全部設為 false
       achievements.forEach(a => a.active = false);
-      // 洗牌抽樣
       const shuffled = [...uncompleted].sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, count);
       selected.forEach(a => a.active = true);
@@ -3374,7 +3583,337 @@
       renderAll();
     }
 
+    // ==========================================
+    // 跨裝置同步核心 (Compact Base64 URL Sync)
+    // ==========================================
+    function encodeCompactState() {
+      const modeMap = { 'steam': 0, 'equal': 1, 'inverse': 2, 'custom': 3 };
+      const modeByte = modeMap[currentWeightMode] || 0;
+      const compBytes = new Uint8Array(13);
+      const actBytes = new Uint8Array(13);
+
+      achievements.forEach((a, i) => {
+        if (i < 104) {
+          const byteIdx = Math.floor(i / 8);
+          const bitIdx = i % 8;
+          if (a.completed) compBytes[byteIdx] |= (1 << bitIdx);
+          if (a.active) actBytes[byteIdx] |= (1 << bitIdx);
+        }
+      });
+
+      const total = new Uint8Array(27);
+      total[0] = modeByte;
+      total.set(compBytes, 1);
+      total.set(actBytes, 14);
+
+      let binStr = '';
+      for (let i = 0; i < total.length; i++) {
+        binStr += String.fromCharCode(total[i]);
+      }
+      return btoa(binStr).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    function decodeCompactState(code) {
+      try {
+        let base64 = code.replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) base64 += '=';
+        const binStr = atob(base64);
+        const total = new Uint8Array(binStr.length);
+        for (let i = 0; i < binStr.length; i++) {
+          total[i] = binStr.charCodeAt(i);
+        }
+        if (total.length < 27) return false;
+
+        const modeMap = { 0: 'steam', 1: 'equal', 2: 'inverse', 3: 'custom' };
+        currentWeightMode = modeMap[total[0]] || 'steam';
+        const modeSel = document.getElementById('weightModeSelect');
+        if (modeSel) modeSel.value = currentWeightMode;
+
+        const compBytes = total.subarray(1, 14);
+        const actBytes = total.subarray(14, 27);
+
+        achievements.forEach((a, i) => {
+          if (i < 104) {
+            const byteIdx = Math.floor(i / 8);
+            const bitIdx = i % 8;
+            a.completed = Boolean(compBytes[byteIdx] & (1 << bitIdx));
+            a.active = Boolean(actBytes[byteIdx] & (1 << bitIdx));
+          }
+        });
+        return true;
+      } catch (e) {
+        console.error('解碼失敗:', e);
+        return false;
+      }
+    }
+
+    function generateSyncUrl() {
+      const code = encodeCompactState();
+      const baseUrl = window.location.origin + window.location.pathname;
+      return `${baseUrl}#s=${code}`;
+    }
+
+    function openQrSyncModal() {
+      const url = generateSyncUrl();
+      document.getElementById('syncUrlInput').value = url;
+      // 利用公開穩定的 QR Code 產生器 API
+      const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+      document.getElementById('qrCodeImg').src = qrApi;
+      document.getElementById('qrSyncModal').classList.add('active');
+    }
+
+    function closeQrSyncModal() {
+      document.getElementById('qrSyncModal').classList.remove('active');
+    }
+
+    function copySyncUrl() {
+      const input = document.getElementById('syncUrlInput');
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => {
+        showToast('📋 同步網址已複製到剪貼簿！');
+      }).catch(() => {
+        prompt('請複製以下專屬同步網址：', input.value);
+      });
+    }
+
+    function checkUrlStateSync() {
+      const hash = window.location.hash;
+      if (hash && hash.includes('#s=')) {
+        const code = hash.split('#s=')[1].split('&')[0];
+        if (code) {
+          const success = decodeCompactState(code);
+          if (success) {
+            // 清理 hash 保持網址整潔
+            history.replaceState(null, '', window.location.pathname);
+            showToast('🎉 成功從其他裝置載入同步進度！');
+          }
+        }
+      }
+      // 若包含雲端授權分享
+      if (hash && hash.includes('#gist=')) {
+        const params = new URLSearchParams(hash.substring(1));
+        const gId = params.get('gist');
+        const tok = params.get('token');
+        if (gId) {
+          cloudGistId = gId;
+          if (tok) cloudToken = tok;
+          autoCloudSync = true;
+          localStorage.setItem('raft_cloud_gist_id', cloudGistId);
+          localStorage.setItem('raft_cloud_token', cloudToken);
+          localStorage.setItem('raft_auto_cloud_sync', 'true');
+          history.replaceState(null, '', window.location.pathname);
+          updateCloudUI();
+          downloadFromCloud(true);
+        }
+      }
+    }
+
+    // ==========================================
+    // GitHub Gist 雲端存檔雙向同步
+    // ==========================================
+    function updateCloudUI() {
+      const unboundSec = document.getElementById('cloudUnboundSection');
+      const boundSec = document.getElementById('cloudBoundSection');
+      const statusText = document.getElementById('cloudStatusText');
+      const autoCheck = document.getElementById('autoSyncCheck');
+
+      if (cloudGistId) {
+        unboundSec.style.display = 'none';
+        boundSec.style.display = 'block';
+        document.getElementById('boundGistId').textContent = cloudGistId.substring(0, 10) + '...';
+        const lastSync = localStorage.getItem('raft_cloud_last_sync') || '剛剛';
+        document.getElementById('boundLastSync').textContent = lastSync;
+        if (autoCheck) autoCheck.checked = autoCloudSync;
+        statusText.innerHTML = `☁️ 雲端存檔：<b style="color: #66bb6a;">已連結 Gist</b> (${lastSync})`;
+      } else {
+        unboundSec.style.display = 'block';
+        boundSec.style.display = 'none';
+        statusText.innerHTML = `☁️ 雲端存檔：未連結 (本機模式)`;
+      }
+    }
+
+    function openCloudModal() {
+      document.getElementById('cloudTokenInput').value = cloudToken;
+      updateCloudUI();
+      document.getElementById('cloudModal').classList.add('active');
+    }
+
+    function closeCloudModal() {
+      document.getElementById('cloudModal').classList.remove('active');
+    }
+
+    async function initCloudGist() {
+      const token = document.getElementById('cloudTokenInput').value.trim();
+      if (!token) {
+        alert('請先貼上你的 GitHub Personal Access Token (需勾選 gist 權限)！');
+        return;
+      }
+
+      showToast('正在與 GitHub 連線建立存檔...');
+      try {
+        const payload = {
+          description: 'Raft Achievement Wheel Cloud Save',
+          public: false,
+          files: {
+            'raft_save.json': {
+              content: JSON.stringify({
+                version: 1,
+                updatedAt: new Date().toISOString(),
+                weightMode: currentWeightMode,
+                achievements: achievements
+              }, null, 2)
+            }
+          }
+        };
+
+        const res = await fetch('https://api.github.com/gists', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github+json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error('GitHub API 驗證失敗：' + res.status);
+        const data = await res.json();
+        if (data.id) {
+          cloudGistId = data.id;
+          cloudToken = token;
+          autoCloudSync = true;
+          localStorage.setItem('raft_cloud_gist_id', cloudGistId);
+          localStorage.setItem('raft_cloud_token', cloudToken);
+          localStorage.setItem('raft_auto_cloud_sync', 'true');
+          localStorage.setItem('raft_cloud_last_sync', new Date().toLocaleTimeString());
+          updateCloudUI();
+          showToast('🚀 專屬雲端存檔建立成功！已啟用自動同步。');
+        }
+      } catch (err) {
+        alert('建立失敗，請檢查 Token 權限是否正確 (需勾選 gist)：' + err.message);
+      }
+    }
+
+    async function uploadToCloud(manual = false) {
+      if (!cloudGistId || !cloudToken) {
+        if (manual) openCloudModal();
+        return;
+      }
+      isSyncing = true;
+      if (manual) showToast('正在上傳進度至 GitHub 雲端...');
+
+      try {
+        const res = await fetch(`https://api.github.com/gists/${cloudGistId}`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${cloudToken}`,
+            'Accept': 'application/vnd.github+json'
+          },
+          body: JSON.stringify({
+            files: {
+              'raft_save.json': {
+                content: JSON.stringify({
+                  version: 1,
+                  updatedAt: new Date().toISOString(),
+                  weightMode: currentWeightMode,
+                  achievements: achievements
+                }, null, 2)
+              }
+            }
+          })
+        });
+
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const nowStr = new Date().toLocaleTimeString();
+        localStorage.setItem('raft_cloud_last_sync', nowStr);
+        updateCloudUI();
+        if (manual) showToast('☁️ 雲端存檔已更新！');
+      } catch (e) {
+        console.error('雲端上傳失敗:', e);
+        if (manual) alert('上傳失敗：' + e.message);
+      } finally {
+        isSyncing = false;
+      }
+    }
+
+    async function downloadFromCloud(manual = false) {
+      if (!cloudGistId) return;
+      isSyncing = true;
+      if (manual) showToast('正在從 GitHub 雲端拉取進度...');
+
+      try {
+        const headers = { 'Accept': 'application/vnd.github+json' };
+        if (cloudToken) headers['Authorization'] = `Bearer ${cloudToken}`;
+
+        const res = await fetch(`https://api.github.com/gists/${cloudGistId}`, { headers });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        if (data.files && data.files['raft_save.json']) {
+          const saveObj = JSON.parse(data.files['raft_save.json'].content);
+          if (Array.isArray(saveObj.achievements) && saveObj.achievements.length >= 100) {
+            achievements = saveObj.achievements;
+            if (saveObj.weightMode) {
+              currentWeightMode = saveObj.weightMode;
+              const sel = document.getElementById('weightModeSelect');
+              if (sel) sel.value = currentWeightMode;
+            }
+            const nowStr = new Date().toLocaleTimeString();
+            localStorage.setItem('raft_cloud_last_sync', nowStr);
+            renderAll();
+            updateCloudUI();
+            if (manual) showToast('📥 已成功載入最新的雲端進度！');
+          }
+        }
+      } catch (e) {
+        console.error('雲端拉取失敗:', e);
+        if (manual) alert('下載雲端存檔失敗：' + e.message);
+      } finally {
+        isSyncing = false;
+      }
+    }
+
+    function triggerCloudSync() {
+      if (cloudGistId && cloudToken) {
+        uploadToCloud(true);
+      } else {
+        openCloudModal();
+      }
+    }
+
+    function toggleAutoSync(checked) {
+      autoCloudSync = checked;
+      localStorage.setItem('raft_auto_cloud_sync', checked ? 'true' : 'false');
+      showToast(checked ? '已開啟變更時自動同步' : '已關閉自動同步');
+    }
+
+    function disconnectCloud() {
+      if (confirm('確定要解除此裝置與 GitHub 雲端存檔的連結嗎？（雲端上的資料不會被刪除）')) {
+        cloudGistId = '';
+        cloudToken = '';
+        autoCloudSync = false;
+        localStorage.removeItem('raft_cloud_gist_id');
+        localStorage.removeItem('raft_cloud_token');
+        localStorage.removeItem('raft_auto_cloud_sync');
+        localStorage.removeItem('raft_cloud_last_sync');
+        updateCloudUI();
+        showToast('已解除雲端綁定');
+      }
+    }
+
+    function openQrWithCloud() {
+      closeCloudModal();
+      // 產生包含 Gist ID 與 Token 的綁定網址
+      const baseUrl = window.location.origin + window.location.pathname;
+      const cloudShareUrl = `${baseUrl}#gist=${cloudGistId}&token=${cloudToken}`;
+      document.getElementById('syncUrlInput').value = cloudShareUrl;
+      const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(cloudShareUrl)}`;
+      document.getElementById('qrCodeImg').src = qrApi;
+      document.getElementById('qrSyncModal').classList.add('active');
+    }
+
+    // ==========================================
     // 新增 / 編輯 Modal 控制
+    // ==========================================
     function openAddModal() {
       document.getElementById('editItemId').value = '';
       document.getElementById('modalTitleText').textContent = '新增自訂成就';
@@ -3453,7 +3992,7 @@
     function exportData() {
       const jsonStr = JSON.stringify(achievements, null, 2);
       navigator.clipboard.writeText(jsonStr).then(() => {
-        alert('成就進度 JSON 已複製到剪貼簿！可傳送給朋友共享或存檔。');
+        showToast('💾 成就進度 JSON 已複製到剪貼簿！');
       }).catch(() => {
         prompt('請手動複製以下 JSON 進度資料：', jsonStr);
       });
@@ -3476,7 +4015,7 @@
           achievements = parsed;
           closeImportModal();
           renderAll();
-          alert(`成功匯入 ${parsed.length} 項成就進度！`);
+          showToast(`成功匯入 ${parsed.length} 項成就進度！`);
         } else {
           alert('格式錯誤：必須是成就陣列 JSON！');
         }
@@ -3501,7 +4040,7 @@
         .replace(/"/g, '&quot;');
     }
 
-    // 彩帶煙火特效
+    // 彩帶特效
     function launchConfetti() {
       const cCanvas = document.getElementById('confettiCanvas');
       const cCtx = cCanvas.getContext('2d');
